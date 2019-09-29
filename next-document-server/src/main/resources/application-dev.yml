@@ -1,0 +1,49 @@
+host:
+  # 当前服务部署地址
+  server-host: 172.16.176.65
+
+spring:
+  datasource:
+    username: root
+    password: 123456
+    url: jdbc:mysql://localhost:3306/next_document
+# jackson配置
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+    serialization:
+      write-dates-as-timestamps: true
+    default-property-inclusion: always
+
+# token配置
+token:
+  expiration:
+    days: 7
+  ignore-token-paths: /api/apply/config, /api/user/login
+  need-token-paths:
+
+# 日志级别配置
+logging:
+  level:
+    com.gzl:
+      debug
+
+# 端口项目名配置
+server:
+  port: 9100
+  servlet:
+    context-path: /next_document
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  server:
+    port: 9101
+    servlet:
+      context-path: /
+    ssl:
+      enabled: false
+  endpoint:
+    health:
+      show-details: always
