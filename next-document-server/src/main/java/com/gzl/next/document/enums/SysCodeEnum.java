@@ -15,6 +15,7 @@ public enum SysCodeEnum {
     UNAUTHORIZED(402, "未授权的访问"),
     SERVER_ERROR(500, "系统内部错误"),
     USER_NAME_OR_PASSWORD_ERROR(9000, "登录名或密码错误"),
+    PARAMETER_ERROR(1000, "请求参数错误"),
     ;
 
     private Integer code;
