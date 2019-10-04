@@ -1,15 +1,21 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import HelloWorld from '@/components/HelloWorld'
+import DocumentPanel from '@/views/DocumentPanel'
+import ProjectPanel from '@/views/ProjectPanel'
 
 Vue.use(Router)
 
 export default new Router({
   routes: [
     {
-      path: '/',
-      name: 'HelloWorld',
-      component: HelloWorld
+      path: '/document_panel',
+      name: 'DocumentPanel',
+      component: DocumentPanel
+    },
+    {
+      path: '/project_panel',
+      name: 'ProjectPanel',
+      component: ProjectPanel
     }
   ]
 })
