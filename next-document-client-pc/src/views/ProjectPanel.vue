@@ -11,6 +11,7 @@
           @mouseout="onMouseOut"
           :class="currentActiveIndex == index ? classPurpleLight : classPurple"
         >
+          {{item.projectName}}
         </div>
       </el-col>
       <el-col
@@ -29,8 +30,14 @@
         </div>
       </el-col>
     </div>
-    <div class="arrow-panel">
-      <i class="el-icon-d-arrow-right"></i>
+    <div
+      class="arrow-panel"
+      >
+      <img
+        @mouseenter="changeArrowStyleOnMouseIn"
+        @mouseout="changeArrowStyleOnMouseOut"
+        :src="rightArrowUrl"
+      />
     </div>
   </div>
 </template>
@@ -42,7 +49,45 @@
             classPurple: 'grid-content bg-purple-dark',
             classPurpleLight: 'grid-content bg-purple-light',
             currentActiveIndex: -1,
-            projects: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+            projects: [
+              {
+                id: '1',
+                projectName: '我的日记'
+              },
+              {
+                id: '2',
+                projectName: '项目一'
+              },
+              {
+                id: '3',
+                projectName: '学习笔记'
+              },
+              {
+                id: '4',
+                projectName: '学习笔记'
+              },{
+                id: '5',
+                projectName: '学习笔记'
+              },{
+                id: '6',
+                projectName: '学习笔记'
+              },{
+                id: '7',
+                projectName: '学习笔记'
+              },{
+                id: '8',
+                projectName: '学习笔记'
+              },{
+                id: '9',
+                projectName: '学习笔记'
+              },{
+                id: '10',
+                projectName: '学习笔记'
+              },{
+                id: '11',
+                projectName: '学习笔记'
+              }
+              ],
             backgroundUrl: "background: url('../assets/unsplash.jpg');background-size: cover;",
             imgStyle: {
               backgroundImage: `url(${require('@/assets/unsplash.jpg')})`,
@@ -53,7 +98,8 @@
               backgroundSize: 'contain',
               backgroundRepeat: 'no-repeat',
               backgroundPosition: 'center'
-            }
+            },
+            rightArrowUrl: `${require('@/assets/right-arrow-gray.png')}`
           }
         },
       methods: {
@@ -62,7 +108,13 @@
           },
           onMouseOut: function () {
             this.currentActiveIndex = -1;
-          }
+          },
+        changeArrowStyleOnMouseIn: function () {
+          this.rightArrowUrl = `${require('@/assets/right-arrow-blue.png')}`;
+        },
+        changeArrowStyleOnMouseOut: function () {
+          this.rightArrowUrl = `${require('@/assets/right-arrow-gray.png')}`;
+        }
       }
     }
 </script>
@@ -124,6 +176,10 @@
     height: 100%;
     width: 5%;
     float: right;
-    background-color: brown;
+    /*background-color: brown;*/
+    line-height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 </style>
