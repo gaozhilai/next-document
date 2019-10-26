@@ -6,13 +6,17 @@
         :key="index"
         :span="6"
       >
-        <div
-          @mouseenter="onMouseIn(index)"
-          @mouseout="onMouseOut"
-          :class="currentActiveIndex == index ? classPurpleLight : classPurple"
+        <router-link
+          to="/document_panel"
         >
-          {{item.projectName}}
-        </div>
+          <div
+            @mouseenter="onMouseIn(index)"
+            @mouseout="onMouseOut"
+            :class="currentActiveIndex == index ? classPurpleLight : classPurple"
+          >
+            {{item.projectName}}
+          </div>
+        </router-link>
       </el-col>
       <el-col
         :span="6"
@@ -30,15 +34,19 @@
         </div>
       </el-col>
     </div>
-    <div
-      class="arrow-panel"
+    <router-link
+      to="/drawing_board"
+    >
+      <div
+        class="arrow-panel"
       >
-      <img
-        @mouseenter="changeArrowStyleOnMouseIn"
-        @mouseout="changeArrowStyleOnMouseOut"
-        :src="rightArrowUrl"
-      />
-    </div>
+        <img
+          @mouseenter="changeArrowStyleOnMouseIn"
+          @mouseout="changeArrowStyleOnMouseOut"
+          :src="rightArrowUrl"
+        />
+      </div>
+    </router-link>
   </div>
 </template>
 
@@ -52,39 +60,50 @@
             projects: [
               {
                 id: '1',
+                icon: '',
                 projectName: '我的日记'
               },
               {
                 id: '2',
+                icon: '',
                 projectName: '项目一'
               },
               {
                 id: '3',
+                icon: '',
                 projectName: '学习笔记'
               },
               {
                 id: '4',
+                icon: '',
                 projectName: '学习笔记'
               },{
                 id: '5',
+                icon: '',
                 projectName: '学习笔记'
               },{
                 id: '6',
+                icon: '',
                 projectName: '学习笔记'
               },{
                 id: '7',
+                icon: '',
                 projectName: '学习笔记'
               },{
                 id: '8',
+                icon: '',
                 projectName: '学习笔记'
               },{
                 id: '9',
+                icon: '',
                 projectName: '学习笔记'
               },{
                 id: '10',
+                icon: '',
                 projectName: '学习笔记'
               },{
                 id: '11',
+                icon: '',
                 projectName: '学习笔记'
               }
               ],
