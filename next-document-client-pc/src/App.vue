@@ -11,9 +11,6 @@ export default {
 </script>
 
 <style scoped>
-  html, body, #app {
-    padding: 0px;
-    margin: 0px;
-    height: 100%;
-  }
+  html,body, #app{height:100%; width:100%; overflow:hidden; margin:0;
+    padding:0;}
 </style>
