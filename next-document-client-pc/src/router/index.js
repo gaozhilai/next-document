@@ -17,11 +17,6 @@ export default new Router({
       component: Layout
     },
     {
-      path: '/drawing_board',
-      name: 'DrawingBoard',
-      component: DrawingBoard
-    },
-    {
       path: '/sharing_table',
       name: 'SharingTable',
       component: SharingTable
@@ -33,6 +28,7 @@ export default new Router({
         {path:'project_panel',component:ProjectPanel},
         {path:'document_panel',component:DocumentPanel},
         {path:'project_list',component:ProjectList},
+        {path:'drawing_board',component:DrawingBoard},
       ]
     }
   ]

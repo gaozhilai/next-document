@@ -5,22 +5,35 @@
       >
         <el-aside
           id="aside-layout"
-          width="120px">
+          width="auto"
+        >
           <el-menu
+            :collapse="isCollapse"
             default-active="2"
             class="el-menu-vertical-demo"
             background-color="#545c64"
             text-color="#fff"
             active-text-color="#ffd04b"
             @select="onSelect"
+            router="true"
           >
-            <el-menu-item index="2">
-              <i class="el-icon-menu"></i>
-              <span slot="title"><router-link to="/layout/project_panel">我的项目</router-link></span>
+            <el-menu-item
+              @click="isCollapse ? isCollapse = false : isCollapse = true"
+            >
+              <i :class="isCollapse ? 'el-icon-s-unfold' : 'el-icon-s-fold'"></i>
+              <span slot="title">折叠/展开</span>
             </el-menu-item>
-            <el-menu-item index="3">
-              <i class="el-icon-document"></i>
-              <span slot="title"><router-link to="/layout/project_list">所有项目</router-link></span>
+            <el-menu-item index="/layout/project_panel">
+              <i class="el-icon-s-management"></i>
+              <span slot="title">我的项目</span>
+            </el-menu-item>
+            <el-menu-item index="/layout/project_list">
+              <i class="el-icon-wallet"></i>
+              <span slot="title">所有项目</span>
+            </el-menu-item>
+            <el-menu-item index="/layout/drawing_board">
+              <i class="el-icon-s-open"></i>
+              <span slot="title">来一幅画</span>
             </el-menu-item>
           </el-menu>
         </el-aside>
@@ -39,7 +52,7 @@
     export default {
       data() {
         return {
-
+          isCollapse: true
         };
       },
       methods: {

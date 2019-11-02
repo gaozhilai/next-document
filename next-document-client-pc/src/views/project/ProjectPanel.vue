@@ -43,7 +43,7 @@
         class="arrow"
       >
         <router-link
-          to="/drawing_board"
+          to="/layout/drawing_board"
         >
           <div
             class="arrow-panel"

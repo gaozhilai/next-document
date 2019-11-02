@@ -1,7 +1,9 @@
 <template>
-    <div class="drawing-board">
+    <div id="drawing-board">
       <canvas
         id="canvas"
+        :width="canvasWidth"
+        :height="canvasHeight"
         @mouseup="onMouseUp"
         @mousedown="onMouseDown"
         @mousemove="onMouseMove"
@@ -143,16 +145,20 @@
             maxValue: 50
           },
           radioValue: '画笔',
-          history: []
+          history: [],
+          offsetLeft: 0, // canvas元素距离父容器元素左上角距离
         }
       },
       methods: {
         initCanvas: function () {
           this.canvas = document.getElementById("canvas");
-          this.canvasWidth = `${document.documentElement.clientWidth}`;
-          this.canvasHeight = `${document.documentElement.clientHeight}`;
-          this.canvas.width = this.canvasWidth;
-          this.canvas.height = this.canvasHeight;
+          let drawingBoard = document.getElementById("drawing-board");
+          this.canvasWidth = drawingBoard.offsetWidth;
+          this.canvasHeight = drawingBoard.offsetHeight;
+          this.offsetLeft = drawingBoard.offsetLeft;
+          console.log(drawingBoard.offsetHeight);
+          // this.canvas.width = this.canvasWidth;
+          // this.canvas.height = this.canvasHeight;
           this.canvasCtx = this.canvas.getContext("2d");
           this.canvasCtx.lineWidth = this.lineWidth;
         },
@@ -188,7 +194,7 @@
         },
         onMouseDown: function (e) {
           this.saveHistory();
-          let x = e.clientX;
+          let x = e.clientX - this.offsetLeft;;
           let y = e.clientY;
           this.lastPoint = {"x": x, "y": y};
           this.painting = true;
@@ -196,7 +202,7 @@
         },
         onMouseMove: function (e) {
           if (this.painting) {
-            let x = e.clientX;
+            let x = e.clientX - this.offsetLeft;
             let y = e.clientY;
             let newPoint = {"x": x, "y": y};
             this.drawLine(this.lastPoint.x, this.lastPoint.y, newPoint.x, newPoint.y);
@@ -315,6 +321,12 @@
           console.log("上一步");
           let imgData = this.history.pop();
           this.canvasCtx.putImageData(imgData, 0, 0);
+        },
+        listenerCanvasOffsetLeft: function () {
+          let drawingBoard = document.getElementById("drawing-board");
+          setInterval(() => {
+            this.offsetLeft = drawingBoard.offsetLeft;
+          }, 200)
         }
       },
       created() {
@@ -323,6 +335,7 @@
         this.initCanvas();
         // this.loadCanvasData();
         this.initWebSocket();
+        this.listenerCanvasOffsetLeft();
       },
       watch: {
         slider: {
@@ -342,25 +355,11 @@
 </script>
 
 <style scoped>
-  #canvas {
-    /*background: blueviolet;*/
-    position: fixed;
-    left: 0;
-    top: 0;
-  }
-  .drawing-board {
-    display: block;
-    position: absolute;
-    left: 0px;
-    top: 0px;
-    bottom: 0px;
-    width: 100%;
+  #drawing-board {
     height: 100%;
-    overflow: hidden;
   }
   #color-button-group {
-    position: relative;
-    float: left;
+    position: fixed;
     top: 50%;
     margin-top: -27vh;
   }
@@ -369,8 +368,8 @@
     margin: 3vh;
   }
   #slider {
-    position: relative;
-    float: right;
+    position: fixed;
+    right: 10px;
     top: 50%;
     margin-top: -15vh;
     vertical-align: center;
