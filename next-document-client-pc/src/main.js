@@ -10,6 +10,10 @@ import 'element-ui/lib/theme-chalk/index.css';
 import 'vue-easytable/libs/themes-base/index.css'
 // 导入 table 和 分页组件
 import {VTable,VPagination} from 'vue-easytable'
+import mavonEditor from 'mavon-editor'
+import 'mavon-editor/dist/css/index.css'
+// use
+Vue.use(mavonEditor)
 // 注册到全局
 Vue.component(VTable.name, VTable)
 Vue.component(VPagination.name, VPagination)

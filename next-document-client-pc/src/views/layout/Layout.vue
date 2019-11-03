@@ -15,7 +15,7 @@
             text-color="#fff"
             active-text-color="#ffd04b"
             @select="onSelect"
-            router="true"
+            :router="true"
           >
             <el-menu-item
               @click="isCollapse ? isCollapse = false : isCollapse = true"
