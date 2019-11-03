@@ -35,13 +35,17 @@
               <i class="el-icon-s-open"></i>
               <span slot="title">来一幅画</span>
             </el-menu-item>
+            <el-menu-item index="/layout/vote">
+              <i class="el-icon-s-shop"></i>
+              <span slot="title">报饭/投票</span>
+            </el-menu-item>
           </el-menu>
         </el-aside>
         <el-container
           class="main-layout"
         >
           <el-main>
-            <router-view class="aaa"></router-view>
+            <router-view></router-view>
           </el-main>
         </el-container>
       </el-container>

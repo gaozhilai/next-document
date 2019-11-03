@@ -147,6 +147,7 @@
           radioValue: '画笔',
           history: [],
           offsetLeft: 0, // canvas元素距离父容器元素左上角距离
+          canvasListener: "", // 监听页面元素变化
         }
       },
       methods: {
@@ -323,11 +324,18 @@
           this.canvasCtx.putImageData(imgData, 0, 0);
         },
         listenerCanvasOffsetLeft: function () {
-          let drawingBoard = document.getElementById("drawing-board");
-          setInterval(() => {
+          let listener = setInterval(() => {
+            let drawingBoard = document.getElementById("drawing-board");
+            if (!drawingBoard) {
+              return;
+            }
             this.offsetLeft = drawingBoard.offsetLeft;
+            // 重新设置尺寸会导致canvas画布清空
+            // this.canvasWidth = drawingBoard.offsetWidth;
+            // this.canvasHeight = drawingBoard.offsetHeight;
           }, 200)
-        }
+          this.canvasListener = listener;
+        },
       },
       created() {
       },
@@ -336,6 +344,10 @@
         // this.loadCanvasData();
         this.initWebSocket();
         this.listenerCanvasOffsetLeft();
+      },
+      beforeDestroy() {
+        // 离开页面清空canvas宽高监听器
+        clearInterval(this.canvasListener);
       },
       watch: {
         slider: {

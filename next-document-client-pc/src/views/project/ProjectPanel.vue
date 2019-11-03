@@ -28,13 +28,9 @@
             @mouseenter="onMouseIn(11)"
             @mouseout="onMouseOut"
             :class="currentActiveIndex == 11 ? classPurpleLight : classPurple"
-            :style="iconStyle"
             @click="gotoProjectList"
           >
-            <!--          <img-->
-            <!--            @mouseenter="onMouseIn(11)"-->
-            <!--            @mouseout="onMouseOut"-->
-            <!--            src="../assets/more-icon.png"/>-->
+            <i id="more" class="el-icon-more"></i>
           </div>
         </el-col>
       </el-col>
@@ -122,12 +118,6 @@
               backgroundImage: `url(${require('@/assets/unsplash.jpg')})`,
               backgroundSize: 'cover'
             },
-            iconStyle: {
-              backgroundImage: `url(${require('@/assets/more-icon.png')})`,
-              backgroundSize: 'contain',
-              backgroundRepeat: 'no-repeat',
-              backgroundPosition: 'center'
-            },
             rightArrowUrl: `${require('@/assets/right-arrow-gray.png')}`
           }
         },
@@ -188,5 +178,8 @@
     display:flex;
     align-items:center;
     justify-content:center;
+  }
+  #more {
+    font-size: 50px;
   }
 </style>
