@@ -39,6 +39,10 @@
               <i class="el-icon-s-shop"></i>
               <span slot="title">报饭/投票</span>
             </el-menu-item>
+            <el-menu-item index="/layout/user_list">
+              <i class="el-icon-user-solid"></i>
+              <span slot="title">用户管理</span>
+            </el-menu-item>
           </el-menu>
         </el-aside>
         <el-container

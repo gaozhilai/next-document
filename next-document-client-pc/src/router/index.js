@@ -10,6 +10,7 @@ import Vote from '@/views/vote/Vote';
 import CreateVote from '@/views/vote/components/CreateVote';
 import VoteDetail from '@/views/vote/components/VoteDetail';
 import VoteList from '@/views/vote/components/VoteList';
+import UserList from '@/views/user/UserList';
 
 Vue.use(Router)
 
@@ -42,6 +43,7 @@ export default new Router({
             {path: 'vote_detail', component: VoteDetail},
           ]
         },
+        {path: 'user_list', component: UserList},
       ]
     }
   ]

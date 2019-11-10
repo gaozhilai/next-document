@@ -7,7 +7,17 @@
           <el-tree :data="data" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
         </el-aside>
         <el-container direction="vertical">
-          <el-main>
+          <el-header>
+            <div id="document-header">
+              <div id="document-header-info">
+               author: gzl ; modify by: abc ; 创建时间: 2019/09/11 19:59 ; 修改时间: 2019/09/11 19:59
+              </div>
+              <div id="document-header-right">
+                赞同: 5 ; 反对: 1
+              </div>
+            </div>
+          </el-header>
+          <el-main id="document-editor">
             <mavon-editor
               v-if="preview"
               id="md-editor-preview"
@@ -146,5 +156,18 @@
   }
   #layout-aside {
     max-width: 250px;
+  }
+  #document-editor {
+    padding: 2px;
+  }
+  #document-header {
+    text-align: left;
+  }
+  #document-header-info {
+    display: inline-block;
+  }
+  #document-header-right {
+    display: inline-block;
+    float: right;
   }
 </style>

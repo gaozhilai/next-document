@@ -1,7 +1,7 @@
 <template>
     <div>
       <el-dialog
-        title="收货地址"
+        title="新建项目"
         :visible.sync="dialogFormVisible"
         :modal="modal"
         :append-to-body='true'
