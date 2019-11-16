@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Author: GaoZhilai
+ * @author GaoZhilai
  * Date: 2019/9/29
  * Time: 14:10
  * Description: No Description
@@ -40,8 +40,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             if(isProtectedUrl(request)) {
                 String token = request.getHeader("token");
                 //检查jwt令牌, 如果令牌不合法或者过期, 里面会直接抛出异常, 下面的catch部分会直接返回
-                String userId = JwtUtil.validateToken(token);
-                request.setAttribute("user_id", userId);
+                String loginName = JwtUtil.validateToken(token);
+                request.setAttribute("user_id", loginName);
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -1,17 +1,17 @@
 package com.gzl.next.document.util;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.gzl.next.document.enums.SysCodeEnum;
 import com.gzl.next.document.exception.SysException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Author: GaoZhilai
@@ -30,34 +30,39 @@ public class JwtUtil {
         JwtUtil.expiration = expiration;
     }
 
-    public static String generateToken(String userId) {
+    public static String generateToken(String loginName) {
         Date expirationDate = new DateTime().plusDays(expiration).toDate();
-        HashMap<String, Object> map = new HashMap<>();
-        //you can put any data in the map
-        map.put("user_id", userId);
-        String jwt = Jwts.builder()
-                .setClaims(map)
-                .setExpiration(expirationDate)
-                .signWith(SignatureAlgorithm.HS512, SECRET)
-                .compact();
-        return "Bearer "+jwt; //jwt前面一般都会加Bearer
+        Algorithm algorithm = Algorithm.HMAC256(SECRET);
+        String token = JWT.create()
+                .withClaim("login_name", loginName)
+                //到期时间
+                .withExpiresAt(expirationDate)
+                //创建一个新的JWT，并使用给定的算法进行标记
+                .sign(algorithm);
+        return token;
     }
 
     public static String validateToken(String token) {
         try {
-            // parse the token.
-            Map<String, Object> body = Jwts.parser()
-                    .setSigningKey(SECRET)
-                    .parseClaimsJws(token.replace("Bearer ",""))
-                    .getBody();
-            Object res = body.get("user_id");
-            if (res != null) {
-                return (String) res;
+            DecodedJWT jwt = JWT.decode(token);
+            String loginName = jwt.getClaim("login_name").asString();
+            Algorithm algorithm = Algorithm.HMAC256(SECRET);
+            //在token中附带了username信息
+            JWTVerifier verifier = JWT.require(algorithm).build();
+            verifier.verify(token);
+            if (loginName != null) {
+                return loginName;
             } else {
                 throw new SysException(SysCodeEnum.UNAUTHORIZED);
             }
         }catch (Exception e){
             throw new SysException(SysCodeEnum.UNAUTHORIZED);
         }
+    }
+
+    public static String getClaim(String token) {
+        DecodedJWT jwt = JWT.decode(token);
+        String loginName = jwt.getClaim("login_name").asString();
+        return loginName;
     }
 }
