@@ -3,6 +3,7 @@ package com.gzl.next.document.shiro.filter;
 import com.gzl.next.document.enums.SysCodeEnum;
 import com.gzl.next.document.exception.SysException;
 import com.gzl.next.document.shiro.token.JwtToken;
+import com.gzl.next.document.util.ResultUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter;
@@ -33,10 +34,14 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
                 executeLogin(request, response);
                 return true;
             } catch (Exception e) {
-                //token 错误
-                throw new SysException(SysCodeEnum.UNAUTHORIZED);
+                // 登录报错, 此处异常从jwt filter抛出
+                if (e.getCause() instanceof SysException) {
+                    throw (SysException)e.getCause();
+                }
+                return false;
             }
         }
+        // 未携带Token访问需要授权的路径直接返回false, 不允许访问
         throw new SysException(SysCodeEnum.UNAUTHORIZED);
     }
 
@@ -63,6 +68,11 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
         // ，如果错误他会抛出异常并被捕获
         getSubject(request, response).login(jwtToken);
         // 如果没有抛出异常则代表登入成功，返回true
+        return true;
+    }
+
+    @Override
+    protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception {
         return true;
     }
 }

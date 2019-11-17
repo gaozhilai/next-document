@@ -1,6 +1,11 @@
 spring:
   profiles:
     active: dev
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+    default-property-inclusion: always
+    serialization:
+      write-dates-as-timestamps: true
 # 端口项目名配置
 server:
   port: 9100
@@ -9,9 +14,4 @@ server:
 # Mybatis mapper.xml位置配置
 mybatis:
   mapper-locations: classpath:/mapper/*.xml
-# jackson配置
-jackson:
-  property-naming-strategy: SNAKE_CASE
-  serialization:
-    write-dates-as-timestamps: true
-  default-property-inclusion: always
+# Jackson 配置

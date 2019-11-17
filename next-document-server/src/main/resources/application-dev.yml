@@ -1,7 +1,6 @@
 host:
   # 当前服务部署地址
   server-host: 172.16.176.65
-
 spring:
   datasource:
     username: root

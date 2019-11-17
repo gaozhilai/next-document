@@ -1,7 +1,12 @@
 package com.gzl.next.document.shiro.realm;
 
+import com.gzl.next.document.enums.SysCodeEnum;
+import com.gzl.next.document.exception.SysException;
+import com.gzl.next.document.pojo.entity.AccountUser;
+import com.gzl.next.document.service.UserService;
 import com.gzl.next.document.shiro.token.JwtToken;
 import com.gzl.next.document.util.JwtUtil;
+import com.gzl.next.document.util.ResultUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
@@ -11,6 +16,7 @@ import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -22,6 +28,9 @@ import java.util.Set;
  */
 @Slf4j
 public class JwtRealm extends AuthorizingRealm {
+    @Autowired
+    private UserService userService;
+
     @Override
     public boolean supports(AuthenticationToken token) {
         return token instanceof JwtToken;
@@ -32,7 +41,7 @@ public class JwtRealm extends AuthorizingRealm {
         log.info("账户权限验证方法");
         String loginName = JwtUtil.getClaim(principalCollection.toString());
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
-        // TODO 根据登录名获取拥有的角色和权限
+        // TODO 根据登录名获取拥有的角色和权限, 权限Service方法需要考虑周全
         String role = "admin";
         String rolePermission = "show";
         String permission = "list";
@@ -53,7 +62,15 @@ public class JwtRealm extends AuthorizingRealm {
         log.info("账户登录名密码验证方法");
         String token = (String) authenticationToken.getCredentials();
         String loginName = JwtUtil.validateToken(token);
-        // TODO 根据登录名查询数据库用户信息, 判断账户是否存在, 可用状态
+        if (loginName == null) {
+            // token验证失败
+            throw new AuthenticationException(new SysException(SysCodeEnum.TOKEN_ERROR));
+        }
+        // TODO 每次验证 token 都需要查询数据库, 之后添加缓存处理
+        AccountUser user = userService.getUserByLoginName(loginName);
+        if (!user.getValid()) {
+            throw new AuthenticationException(new SysException(SysCodeEnum.ACCOUNT_BLOCKED));
+        }
         return new SimpleAuthenticationInfo(token, token, "JwtRealm");
     }
 }

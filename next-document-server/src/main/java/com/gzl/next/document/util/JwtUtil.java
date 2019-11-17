@@ -7,6 +7,8 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.gzl.next.document.enums.SysCodeEnum;
 import com.gzl.next.document.exception.SysException;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.crypto.hash.SimpleHash;
+import org.apache.shiro.util.ByteSource;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -53,10 +55,10 @@ public class JwtUtil {
             if (loginName != null) {
                 return loginName;
             } else {
-                throw new SysException(SysCodeEnum.UNAUTHORIZED);
+                return null;
             }
         }catch (Exception e){
-            throw new SysException(SysCodeEnum.UNAUTHORIZED);
+            return null;
         }
     }
 
@@ -64,5 +66,19 @@ public class JwtUtil {
         DecodedJWT jwt = JWT.decode(token);
         String loginName = jwt.getClaim("login_name").asString();
         return loginName;
+    }
+
+    /**
+     * 通过盐值和密码获得数据库中存储的加密后的密码
+     * @param password
+     * @param salt
+     * @return
+     */
+    public static String getRealPwd(String password, String salt) {
+        // 加密算法MD5
+        // 迭代次数
+        String md5Pwd = new SimpleHash("MD5", password,
+                ByteSource.Util.bytes(salt), 2).toHex();
+        return md5Pwd;
     }
 }

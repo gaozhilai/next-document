@@ -23,6 +23,10 @@ public class AccountUser extends BaseEntity {
      */
     private String password;
     /**
+     * 盐值
+     */
+    private String salt;
+    /**
      * 账户是否有效
      */
     private Boolean valid;

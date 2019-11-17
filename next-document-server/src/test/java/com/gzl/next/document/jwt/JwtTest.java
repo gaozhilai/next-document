@@ -21,4 +21,10 @@ public class JwtTest extends BaseTest {
         String res = JwtUtil.validateToken(token);
         log.info("token验证通过, {}", res);
     }
+
+    @Test
+    public void testGeneratePassword() {
+        String password = JwtUtil.getRealPwd("123", "salt1024");
+        log.info("password {}", password);
+    }
 }

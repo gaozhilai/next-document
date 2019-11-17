@@ -14,7 +14,7 @@
         <result column="email" property="email" jdbcType="VARCHAR"/>
     </resultMap>
     <sql id="Base_Column_List">
-    id, created_on, updated_on, login_name, nickname, password, valid, avatar, phone, 
+    id, created_on, updated_on, login_name, nickname, password, salt, valid, avatar, phone,
     email
   </sql>
 

@@ -1,13 +1,21 @@
 package com.gzl.next.document.util;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.gzl.next.document.enums.SysCodeEnum;
+import com.gzl.next.document.exception.SysException;
+import lombok.extern.slf4j.Slf4j;
+
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletResponse;
 
 /**
- * Author: GaoZhilai
+ * @author GaoZhilai
  * Date: 2019/9/29
  * Time: 14:23
  * Description: No Description
  */
+@Slf4j
 public class ResultUtil {
     public static <T> CommonResult<T> renderFailure(SysCodeEnum code, T data) {
         CommonResult<T> result = new CommonResult<>();
@@ -61,5 +69,16 @@ public class ResultUtil {
         result.setMsg(msg);
         result.setData(data);
         return result;
+    }
+
+    public static void renderMsgWidthPrimitiveWay(ServletResponse servletResponse, SysCodeEnum code) {
+        HttpServletResponse response = (HttpServletResponse) servletResponse;
+        try{
+            response.setContentType("application/json;charset=UTF-8");
+            CommonResult result = ResultUtil.renderFailure(code, null);
+            response.getWriter().println(JSON.toJSONString(result, SerializerFeature.WriteMapNullValue));
+        } catch (Exception ex) {
+            log.error("返回错误信息出错, {}", ex);
+        }
     }
 }

@@ -1,5 +1,7 @@
 package com.gzl.next.document.filter;
 
+import com.gzl.next.document.exception.SysException;
+import com.gzl.next.document.util.ResultUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -31,6 +33,13 @@ public class CrosFilter extends OncePerRequestFilter {
             response.setStatus(HttpStatus.OK.value());
             return ;
         }
-        filterChain.doFilter(request, response);
+        try {
+            filterChain.doFilter(request, response);
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (e.getCause() instanceof SysException) {
+                ResultUtil.renderMsgWidthPrimitiveWay(response, ((SysException) e.getCause()).getSysCodeEnum());
+            }
+        }
     }
 }

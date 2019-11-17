@@ -26,6 +26,8 @@ public enum SysCodeEnum {
     USER_NAME_OR_PASSWORD_ERROR(1100, "登录名或密码错误"),
     UNAUTHORIZED(1101, "请登录后再访问"),
     NOT_HAVE_PERMISSION(1102, "当前账户无权访问"),
+    ACCOUNT_BLOCKED(1103, "账户已被封禁"),
+    TOKEN_ERROR(1104, "Token错误, 请重新登录"),
     ;
 
     private Integer code;
