@@ -1,6 +1,10 @@
 package com.gzl.next.document.mapper;
 
+import com.gzl.next.document.pojo.entity.AccountRole;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * @author GaoZhilai
@@ -9,4 +13,10 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface AccountRoleMapper {
+    /**
+     * 通过用户id获取角色
+     * @param userId 用户id
+     * @return 拥有的角色
+     */
+    List<AccountRole> getRoleByUserId(@Param("userId") Long userId);
 }

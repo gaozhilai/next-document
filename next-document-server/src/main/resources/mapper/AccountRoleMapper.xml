@@ -10,5 +10,14 @@
     </resultMap>
     <sql id="Base_Column_List">
     id, created_on, updated_on, role_name, description
-  </sql>
+    </sql>
+    <select id="getRoleByUserId" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM account_role
+        WHERE id IN
+        (
+          SELECT role_id FROM account_user_role WHERE user_id = #{userId}
+        )
+    </select>
 </mapper>

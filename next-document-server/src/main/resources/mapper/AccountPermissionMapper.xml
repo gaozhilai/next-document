@@ -10,5 +10,25 @@
     </resultMap>
     <sql id="Base_Column_List">
     id, created_on, updated_on, permission_name, description
-  </sql>
+    </sql>
+
+    <select id="getAvailablePermission" resultMap="BaseResultMap">
+        SELECT
+	*
+FROM
+	account_permission
+WHERE
+	id IN (
+SELECT
+	permission_id
+FROM
+	( ( SELECT permission_id FROM account_role_permission WHERE role_id IN
+	 <foreach collection="roleIds" item="roleId" separator="," open="(" close=")">
+         #{roleId}
+     </foreach>
+	 ) UNION ( SELECT permission_id FROM account_user_permission WHERE user_id = #{userId} ) ) permissions_table
+WHERE
+	permission_id NOT IN ( SELECT permission_id FROM account_permission_forbidden WHERE user_id = #{userId} )
+	)
+    </select>
 </mapper>

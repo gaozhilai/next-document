@@ -2,6 +2,9 @@ package com.gzl.next.document.shiro.realm;
 
 import com.gzl.next.document.enums.SysCodeEnum;
 import com.gzl.next.document.exception.SysException;
+import com.gzl.next.document.pojo.dto.RolePermissionDTO;
+import com.gzl.next.document.pojo.entity.AccountPermission;
+import com.gzl.next.document.pojo.entity.AccountRole;
 import com.gzl.next.document.pojo.entity.AccountUser;
 import com.gzl.next.document.service.UserService;
 import com.gzl.next.document.shiro.token.JwtToken;
@@ -19,7 +22,9 @@ import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author GaoZhilai
@@ -42,18 +47,24 @@ public class JwtRealm extends AuthorizingRealm {
         String loginName = JwtUtil.getClaim(principalCollection.toString());
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
         // TODO 根据登录名获取拥有的角色和权限, 权限Service方法需要考虑周全
-        String role = "admin";
-        String rolePermission = "show";
-        String permission = "list";
-        Set<String> roleSet = new HashSet<>();
-        Set<String> permissionSet = new HashSet<>();
-        //需要将 role, permission 封装到 Set 作为 info.setRoles(), info.setStringPermissions() 的参数
-        roleSet.add(role);
-        permissionSet.add(rolePermission);
-        permissionSet.add(permission);
-        //设置该用户拥有的角色和权限
-        info.setRoles(roleSet);
-        info.setStringPermissions(permissionSet);
+        // TODO 当前实时从数据库查取权限, 下个版本增加缓存
+        RolePermissionDTO availableRoleAndPermission = userService.getAvailableRoleAndPermission(loginName);
+        List<AccountRole> roleList = availableRoleAndPermission.getRoles();
+        List<AccountPermission> permissionList = availableRoleAndPermission.getPermissions();
+        if (roleList != null) {
+            Set<String> roles = roleList.stream()
+                    .map(role -> role.getRoleName())
+                    .distinct()
+                    .collect(Collectors.toSet());
+            info.setRoles(roles);
+        }
+        if (permissionList != null) {
+            Set<String> permissions = permissionList.stream()
+                    .map(permission -> permission.getPermissionName())
+                    .distinct()
+                    .collect(Collectors.toSet());
+            info.setStringPermissions(permissions);
+        }
         return info;
     }
 

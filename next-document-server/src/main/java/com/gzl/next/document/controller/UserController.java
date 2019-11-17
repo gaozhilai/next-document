@@ -46,14 +46,16 @@ public class UserController {
         return ResultUtil.renderSuccess("登录成功", tokenVO);
     }
 
-    @RequiresRoles(logical = Logical.OR, value = {"user", "admin"})
-    @RequiresPermissions(logical = Logical.AND, value = {"show", "list", "modify"})
+    @RequiresRoles(logical = Logical.OR, value = {"admin"})
+    @RequiresPermissions(logical = Logical.AND, value = {"show"})
     @ResponseBody
     @GetMapping("/show")
     public String showUser() {
         return "这是学生信息";
     }
 
+    @RequiresRoles(logical = Logical.OR, value = {"admin"})
+    @RequiresPermissions(logical = Logical.AND, value = {"show", "list"})
     @GetMapping("/anon_show")
     public String anonShowUser() {
         return "这是学生信息";
