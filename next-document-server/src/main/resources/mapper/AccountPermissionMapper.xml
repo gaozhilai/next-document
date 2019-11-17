@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gzl.next.document.mapper.AccountPermissionMapper">
+    <resultMap id="BaseResultMap" type="com.gzl.next.document.pojo.entity.AccountPermission">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="created_on" property="createdOn" jdbcType="TIMESTAMP"/>
+        <result column="updated_on" property="updatedOn" jdbcType="TIMESTAMP"/>
+        <result column="permission_name" property="permissionName" jdbcType="VARCHAR"/>
+        <result column="description" property="description" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, created_on, updated_on, permission_name, description
+  </sql>
+</mapper>

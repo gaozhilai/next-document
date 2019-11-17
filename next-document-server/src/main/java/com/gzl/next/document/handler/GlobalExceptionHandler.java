@@ -5,6 +5,7 @@ import com.gzl.next.document.exception.SysException;
 import com.gzl.next.document.util.CommonResult;
 import com.gzl.next.document.util.ResultUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.authz.UnauthorizedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -44,6 +45,9 @@ public class GlobalExceptionHandler {
                 errorReason.append("参数").append(getSnakeCase(errotField)).append(defaultMessage);
             }
             return ResultUtil.renderFailure(SysCodeEnum.PARAMETER_ERROR, errorReason.toString());
+        }
+        if (e instanceof UnauthorizedException) {
+            return ResultUtil.renderFailure(SysCodeEnum.NOT_HAVE_PERMISSION);
         }
         if (e instanceof HttpRequestMethodNotSupportedException) {
             return ResultUtil.renderFailure(e.getMessage());

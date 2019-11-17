@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gzl.next.document.mapper.DocDocumentMapper">
+    <resultMap id="BaseResultMap" type="com.gzl.next.document.pojo.entity.DocDocument">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="created_on" property="createdOn" jdbcType="TIMESTAMP"/>
+        <result column="updated_on" property="updatedOn" jdbcType="TIMESTAMP"/>
+        <result column="category_id" property="categoryId" jdbcType="BIGINT"/>
+        <result column="project_id" property="projectId" jdbcType="BIGINT"/>
+        <result column="doc_name" property="docName" jdbcType="VARCHAR"/>
+        <result column="doc_content" property="docContent" jdbcType="LONGVARCHAR"/>
+        <result column="created_by" property="createdBy" jdbcType="BIGINT"/>
+        <result column="updated_id" property="updatedId" jdbcType="BIGINT"/>
+        <result column="free_editing" property="freeEditing" jdbcType="BIT"/>
+        <result column="share_url" property="shareUrl" jdbcType="VARCHAR"/>
+        <result column="validate" property="validate" jdbcType="BIT"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, created_on, updated_on, category_id, project_id, doc_name, doc_content, created_by, updated_id,
+    free_editing, share_url, validate
+  </sql>
+
+</mapper>
