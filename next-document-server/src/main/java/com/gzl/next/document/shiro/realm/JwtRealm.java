@@ -1,5 +1,8 @@
 package com.gzl.next.document.shiro.realm;
 
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import com.gzl.next.document.enums.SysCodeEnum;
 import com.gzl.next.document.exception.SysException;
 import com.gzl.next.document.pojo.dto.RolePermissionDTO;
@@ -24,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -35,6 +39,28 @@ import java.util.stream.Collectors;
 public class JwtRealm extends AuthorizingRealm {
     @Autowired
     private UserService userService;
+    private CacheLoader<String, RolePermissionDTO> permissionLoader = new CacheLoader<String, RolePermissionDTO>() {
+        @Override
+        public RolePermissionDTO load(String key) throws Exception {
+            return userService.getAvailableRoleAndPermission(key);
+        }
+    };
+    private LoadingCache<String, RolePermissionDTO> permissionCache = CacheBuilder.newBuilder()
+            .maximumSize(500)
+            .expireAfterAccess(60, TimeUnit.MINUTES)
+            .recordStats()
+            .build(permissionLoader);
+    private CacheLoader<String, AccountUser> userLoader = new CacheLoader<String, AccountUser>() {
+        @Override
+        public AccountUser load(String key) throws Exception {
+            return userService.getUserByLoginName(key);
+        }
+    };
+    private LoadingCache<String, AccountUser> userCache = CacheBuilder.newBuilder()
+            .maximumSize(500)
+            .expireAfterAccess(60, TimeUnit.MINUTES)
+            .recordStats()
+            .build(userLoader);
 
     @Override
     public boolean supports(AuthenticationToken token) {
@@ -47,8 +73,7 @@ public class JwtRealm extends AuthorizingRealm {
         String loginName = JwtUtil.getClaim(principalCollection.toString());
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
         // TODO 根据登录名获取拥有的角色和权限, 权限Service方法需要考虑周全
-        // TODO 当前实时从数据库查取权限, 下个版本增加缓存
-        RolePermissionDTO availableRoleAndPermission = userService.getAvailableRoleAndPermission(loginName);
+        RolePermissionDTO availableRoleAndPermission = permissionCache.getUnchecked(loginName);
         List<AccountRole> roleList = availableRoleAndPermission.getRoles();
         List<AccountPermission> permissionList = availableRoleAndPermission.getPermissions();
         if (roleList != null) {
@@ -77,8 +102,7 @@ public class JwtRealm extends AuthorizingRealm {
             // token验证失败
             throw new AuthenticationException(new SysException(SysCodeEnum.TOKEN_ERROR));
         }
-        // TODO 每次验证 token 都需要查询数据库, 之后添加缓存处理
-        AccountUser user = userService.getUserByLoginName(loginName);
+        AccountUser user = userCache.getUnchecked(loginName);
         if (!user.getValid()) {
             throw new AuthenticationException(new SysException(SysCodeEnum.ACCOUNT_BLOCKED));
         }
