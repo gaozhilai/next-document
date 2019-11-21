@@ -1,40 +1,40 @@
 package com.gzl.next.document.enums;
 
 import lombok.Getter;
+import org.springframework.http.HttpStatus;
 
 /**
  * @author GaoZhilai
- * Date: 2019/9/29
- * Time: 14:18
- * Description: No Description
+ * @date 2019/9/29 14:18
+ * 错误提示枚举类
  */
 @Getter
 public enum SysCodeEnum {
     /**
      *  通用错误码
      */
-    FAILURE(0, "请求失败"),
-    SUCCESS(1, "请求成功"),
-    SERVER_ERROR(500, "系统内部错误"),
+    FAILURE(HttpStatus.BAD_REQUEST, "请求失败"),
+    SUCCESS(HttpStatus.OK, "请求成功"),
+    SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "系统内部错误"),
     /**
      * 1000 - 1099 参数错误
      */
-    PARAMETER_ERROR(1000, "请求参数错误"),
+    PARAMETER_ERROR(HttpStatus.BAD_REQUEST, "请求参数错误"),
     /**
      * 1100 - 1199 账户, 权限相关错误
      */
-    USER_NAME_OR_PASSWORD_ERROR(1100, "登录名或密码错误"),
-    UNAUTHORIZED(1101, "请登录后再访问"),
-    NOT_HAVE_PERMISSION(1102, "当前账户无权访问"),
-    ACCOUNT_BLOCKED(1103, "账户已被封禁"),
-    TOKEN_ERROR(1104, "Token错误, 请重新登录"),
+    USER_NAME_OR_PASSWORD_ERROR(HttpStatus.BAD_REQUEST, "登录名或密码错误"),
+    UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "请登录后再访问"),
+    NOT_HAVE_PERMISSION(HttpStatus.UNAUTHORIZED, "当前账户无权访问"),
+    ACCOUNT_BLOCKED(HttpStatus.UNAUTHORIZED, "账户已被封禁"),
+    TOKEN_ERROR(HttpStatus.UNAUTHORIZED, "Token错误, 请重新登录"),
     ;
 
-    private Integer code;
+    private HttpStatus status;
     private String description;
 
-    SysCodeEnum(Integer code, String description) {
-        this.code = code;
+    SysCodeEnum(HttpStatus code, String description) {
+        this.status = code;
         this.description = description;
     }
 }

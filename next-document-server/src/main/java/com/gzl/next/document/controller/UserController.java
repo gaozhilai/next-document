@@ -15,13 +15,14 @@ import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
  * @author GaoZhilai
  * @date 19/11/16
- * @description No Description
+ * No Description
  */
 @RestController
 @RequestMapping("/user")
@@ -30,7 +31,7 @@ public class UserController {
     private AccountUserMapper accountUserMapper;
 
     @PostMapping("/login")
-    public CommonResult<LoginVO> login(@Validated({SelectGroup.class}) @RequestBody UserQUERY param) {
+    public ResponseEntity<CommonResult<LoginVO>> login(@Validated({SelectGroup.class}) @RequestBody UserQUERY param) {
         AccountUser user = accountUserMapper.getAccountUserByLoginName(param.getLoginName());
         if (user == null) {
             throw new SysException(SysCodeEnum.USER_NAME_OR_PASSWORD_ERROR);
@@ -54,8 +55,6 @@ public class UserController {
         return "这是学生信息";
     }
 
-    @RequiresRoles(logical = Logical.OR, value = {"admin"})
-    @RequiresPermissions(logical = Logical.AND, value = {"show", "list"})
     @GetMapping("/anon_show")
     public String anonShowUser() {
         return "这是学生信息";

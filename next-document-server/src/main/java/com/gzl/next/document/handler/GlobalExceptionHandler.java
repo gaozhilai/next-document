@@ -6,6 +6,7 @@ import com.gzl.next.document.util.CommonResult;
 import com.gzl.next.document.util.ResultUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.UnauthorizedException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -17,10 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 /**
- * Author: GaoZhilai
- * Date: 2019/9/29
- * Time: 15:59
- * Description: No Description
+ * @author GaoZhilai
+ * @date 2019/9/29 15:59
+ * 全局异常处理器
  */
 @ControllerAdvice
 @RestController
@@ -29,7 +29,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler
     @ResponseBody
-    public CommonResult handleException(Exception e) {
+    public ResponseEntity<CommonResult<String>> handleException(Exception e) {
         if (e instanceof SysException) {
             SysException sysException = (SysException) e;
             return ResultUtil.renderFailure(sysException.getSysCodeEnum(), null);
@@ -47,10 +47,10 @@ public class GlobalExceptionHandler {
             return ResultUtil.renderFailure(SysCodeEnum.PARAMETER_ERROR, errorReason.toString());
         }
         if (e instanceof UnauthorizedException) {
-            return ResultUtil.renderFailure(SysCodeEnum.NOT_HAVE_PERMISSION);
+            return ResultUtil.renderFailure(SysCodeEnum.NOT_HAVE_PERMISSION, null);
         }
         if (e instanceof HttpRequestMethodNotSupportedException) {
-            return ResultUtil.renderFailure(e.getMessage());
+            return ResultUtil.renderFailure(SysCodeEnum.FAILURE, e.getMessage());
         }
         e.printStackTrace();
         return ResultUtil.renderFailure(SysCodeEnum.SERVER_ERROR, null);
