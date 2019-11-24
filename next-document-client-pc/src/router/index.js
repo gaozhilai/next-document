@@ -11,6 +11,7 @@ const CreateVote = () => import('@/views/vote/components/CreateVote');
 const VoteDetail = () => import('@/views/vote/components/VoteDetail');
 const VoteList = () => import('@/views/vote/components/VoteList');
 const UserList = () => import('@/views/user/UserList');
+const InstantMessaging = () => import('@/views/message/im/InstantMessaging');
 
 Vue.use(Router)
 
@@ -44,6 +45,7 @@ export default new Router({
           ]
         },
         {path: 'user_list', component: UserList},
+        {path: 'instant_messaging', component: InstantMessaging},
       ]
     }
   ]

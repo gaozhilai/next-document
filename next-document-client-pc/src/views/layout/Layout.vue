@@ -43,6 +43,10 @@
               <i class="el-icon-user-solid"></i>
               <span slot="title">用户管理</span>
             </el-menu-item>
+            <el-menu-item index="/layout/instant_messaging">
+              <i class="el-icon-chat-dot-square"></i>
+              <span slot="title">即时通信</span>
+            </el-menu-item>
           </el-menu>
         </el-aside>
         <el-container
