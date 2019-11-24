@@ -1,16 +1,16 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import DocumentPanel from '@/views//document/essay/DocumentPanel'
-import ProjectPanel from '@/views/project/ProjectPanel'
-import ProjectList from '@/views/project/ProjectList'
-import DrawingBoard from '@/views/board/DrawingBoard';
-import SharingTable from '@/views/document/table/SharingTable';
-import Layout from '@/views/layout/Layout';
-import Vote from '@/views/vote/Vote';
-import CreateVote from '@/views/vote/components/CreateVote';
-import VoteDetail from '@/views/vote/components/VoteDetail';
-import VoteList from '@/views/vote/components/VoteList';
-import UserList from '@/views/user/UserList';
+const DocumentPanel = () => import('@/views//document/essay/DocumentPanel');
+const ProjectPanel = () => import('@/views/project/ProjectPanel');
+const ProjectList = () => import('@/views/project/ProjectList');
+const DrawingBoard = () => import('@/views/board/DrawingBoard');
+const SharingTable = () => import('@/views/document/table/SharingTable');
+const Layout = () => import('@/views/layout/Layout');
+const Vote = () => import('@/views/vote/Vote');
+const CreateVote = () => import('@/views/vote/components/CreateVote');
+const VoteDetail = () => import('@/views/vote/components/VoteDetail');
+const VoteList = () => import('@/views/vote/components/VoteList');
+const UserList = () => import('@/views/user/UserList');
 
 Vue.use(Router)
 
