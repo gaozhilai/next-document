@@ -39,7 +39,7 @@
               <i class="el-icon-s-shop"></i>
               <span slot="title">报饭/投票</span>
             </el-menu-item>
-            <el-menu-item index="/layout/user_list">
+            <el-menu-item index="/layout/user_list" v-has="'admin'">
               <i class="el-icon-user-solid"></i>
               <span slot="title">用户管理</span>
             </el-menu-item>
@@ -72,6 +72,10 @@
           console.log("index", index);
           console.log("indexPath", indexPath);
         }
+      },
+      created() {
+        let roleAndPermission = ["admin"];
+        sessionStorage.setItem("RoleAndPermissionList", JSON.stringify(roleAndPermission));
       }
     }
 </script>
