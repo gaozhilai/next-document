@@ -1,5 +1,6 @@
 package com.gzl.next.document.pojo.vo;
 
+import com.gzl.next.document.pojo.dto.RolePermissionDTO;
 import lombok.Builder;
 import lombok.Data;
 
@@ -12,4 +13,5 @@ import lombok.Data;
 @Builder
 public class LoginVO {
     private String token;
+    private RolePermissionDTO roleAndPermission;
 }

@@ -3,12 +3,14 @@ package com.gzl.next.document.controller;
 import com.gzl.next.document.enums.SysCodeEnum;
 import com.gzl.next.document.exception.SysException;
 import com.gzl.next.document.mapper.AccountUserMapper;
+import com.gzl.next.document.pojo.dto.RolePermissionDTO;
 import com.gzl.next.document.pojo.entity.AccountUser;
 import com.gzl.next.document.pojo.query.UserQUERY;
 import com.gzl.next.document.pojo.vo.LoginVO;
 import com.gzl.next.document.util.CommonResult;
 import com.gzl.next.document.util.JwtUtil;
 import com.gzl.next.document.util.ResultUtil;
+import com.gzl.next.document.util.UserCache;
 import com.gzl.next.document.validate.SelectGroup;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.Logical;
@@ -43,8 +45,13 @@ public class UserController {
             throw new SysException(SysCodeEnum.USER_NAME_OR_PASSWORD_ERROR);
         }
         String token = JwtUtil.generateToken(user.getLoginName());
-        LoginVO tokenVO = LoginVO.builder().token(token).build();
-        return ResultUtil.renderSuccess("登录成功", tokenVO);
+        RolePermissionDTO rolePermissionDTO = UserCache.permissionCache.getUnchecked(param.getLoginName());
+        LoginVO loginVO = LoginVO
+                .builder()
+                .token(token)
+                .roleAndPermission(rolePermissionDTO)
+                .build();
+        return ResultUtil.renderSuccess("登录成功", loginVO);
     }
 
     @RequiresRoles(logical = Logical.OR, value = {"admin"})

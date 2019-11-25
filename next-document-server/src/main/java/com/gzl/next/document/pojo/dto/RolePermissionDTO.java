@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author GaoZhilai
@@ -15,6 +16,6 @@ import java.util.List;
 @Data
 @Builder
 public class RolePermissionDTO {
-    List<AccountRole> roles;
-    List<AccountPermission> permissions;
+    private Set<String> roles;
+    private Set<String> permissions;
 }

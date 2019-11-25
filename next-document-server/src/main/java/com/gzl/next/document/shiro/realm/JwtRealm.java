@@ -13,6 +13,7 @@ import com.gzl.next.document.service.UserService;
 import com.gzl.next.document.shiro.token.JwtToken;
 import com.gzl.next.document.util.JwtUtil;
 import com.gzl.next.document.util.ResultUtil;
+import com.gzl.next.document.util.UserCache;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
@@ -39,28 +40,6 @@ import java.util.stream.Collectors;
 public class JwtRealm extends AuthorizingRealm {
     @Autowired
     private UserService userService;
-    private CacheLoader<String, RolePermissionDTO> permissionLoader = new CacheLoader<String, RolePermissionDTO>() {
-        @Override
-        public RolePermissionDTO load(String key) throws Exception {
-            return userService.getAvailableRoleAndPermission(key);
-        }
-    };
-    private LoadingCache<String, RolePermissionDTO> permissionCache = CacheBuilder.newBuilder()
-            .maximumSize(500)
-            .expireAfterAccess(60, TimeUnit.MINUTES)
-            .recordStats()
-            .build(permissionLoader);
-    private CacheLoader<String, AccountUser> userLoader = new CacheLoader<String, AccountUser>() {
-        @Override
-        public AccountUser load(String key) throws Exception {
-            return userService.getUserByLoginName(key);
-        }
-    };
-    private LoadingCache<String, AccountUser> userCache = CacheBuilder.newBuilder()
-            .maximumSize(500)
-            .expireAfterAccess(60, TimeUnit.MINUTES)
-            .recordStats()
-            .build(userLoader);
 
     @Override
     public boolean supports(AuthenticationToken token) {
@@ -73,22 +52,12 @@ public class JwtRealm extends AuthorizingRealm {
         String loginName = JwtUtil.getClaim(principalCollection.toString());
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
         // TODO 根据登录名获取拥有的角色和权限, 权限Service方法需要考虑周全
-        RolePermissionDTO availableRoleAndPermission = permissionCache.getUnchecked(loginName);
-        List<AccountRole> roleList = availableRoleAndPermission.getRoles();
-        List<AccountPermission> permissionList = availableRoleAndPermission.getPermissions();
-        if (roleList != null) {
-            Set<String> roles = roleList.stream()
-                    .map(role -> role.getRoleName())
-                    .distinct()
-                    .collect(Collectors.toSet());
-            info.setRoles(roles);
+        RolePermissionDTO availableRoleAndPermission = UserCache.permissionCache.getUnchecked(loginName);
+        if (availableRoleAndPermission.getRoles() != null) {
+            info.setRoles(availableRoleAndPermission.getRoles());
         }
-        if (permissionList != null) {
-            Set<String> permissions = permissionList.stream()
-                    .map(permission -> permission.getPermissionName())
-                    .distinct()
-                    .collect(Collectors.toSet());
-            info.setStringPermissions(permissions);
+        if (availableRoleAndPermission.getPermissions() != null) {
+            info.setStringPermissions(availableRoleAndPermission.getPermissions());
         }
         return info;
     }
@@ -102,7 +71,7 @@ public class JwtRealm extends AuthorizingRealm {
             // token验证失败
             throw new AuthenticationException(new SysException(SysCodeEnum.TOKEN_ERROR));
         }
-        AccountUser user = userCache.getUnchecked(loginName);
+        AccountUser user = UserCache.userCache.getUnchecked(loginName);
         if (!user.getValid()) {
             throw new AuthenticationException(new SysException(SysCodeEnum.ACCOUNT_BLOCKED));
         }

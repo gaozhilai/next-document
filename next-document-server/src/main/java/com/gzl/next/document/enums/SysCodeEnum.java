@@ -28,6 +28,7 @@ public enum SysCodeEnum {
     NOT_HAVE_PERMISSION(HttpStatus.UNAUTHORIZED, "当前账户无权访问"),
     ACCOUNT_BLOCKED(HttpStatus.UNAUTHORIZED, "账户已被封禁"),
     TOKEN_ERROR(HttpStatus.UNAUTHORIZED, "Token错误, 请重新登录"),
+    TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "登录已过期, 请重新登录"),
     ;
 
     private HttpStatus status;

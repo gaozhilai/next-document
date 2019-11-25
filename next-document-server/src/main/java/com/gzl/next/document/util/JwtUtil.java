@@ -3,6 +3,7 @@ package com.gzl.next.document.util;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.gzl.next.document.enums.SysCodeEnum;
 import com.gzl.next.document.exception.SysException;
@@ -58,6 +59,9 @@ public class JwtUtil {
                 return null;
             }
         }catch (Exception e){
+            if (e instanceof TokenExpiredException) {
+                throw new SysException(SysCodeEnum.TOKEN_EXPIRED);
+            }
             return null;
         }
     }

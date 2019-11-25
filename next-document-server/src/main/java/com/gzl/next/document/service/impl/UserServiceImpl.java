@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author GaoZhilai
@@ -37,10 +39,18 @@ public class UserServiceImpl implements UserService {
     public RolePermissionDTO getAvailableRoleAndPermission(String loginName) {
         AccountUser user = accountUserMapper.getAccountUserByLoginName(loginName);
         Long userId = user.getId();
-        List<AccountRole> roles = accountRoleMapper.getRoleByUserId(userId);
+        List<AccountRole> accountRoles = accountRoleMapper.getRoleByUserId(userId);
         List<Long> roleIds = new ArrayList<>();
-        roles.stream().forEach(role -> roleIds.add(role.getId()));
-        List<AccountPermission> permissions = accountPermissionMapper.getAvailablePermission(roleIds, userId);
+        accountRoles.stream().forEach(role -> roleIds.add(role.getId()));
+        List<AccountPermission> accountPermissions = accountPermissionMapper.getAvailablePermission(roleIds, userId);
+        Set<String> roles = accountRoles
+                .stream()
+                .map(AccountRole::getRoleName)
+                .collect(Collectors.toSet());
+        Set<String> permissions = accountPermissions
+                .stream()
+                .map(AccountPermission::getPermissionName)
+                .collect(Collectors.toSet());
         RolePermissionDTO rolePermissionDTO = RolePermissionDTO.builder().roles(roles).permissions(permissions).build();
         return rolePermissionDTO;
     }
