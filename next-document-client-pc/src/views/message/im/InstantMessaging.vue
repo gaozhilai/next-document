@@ -24,7 +24,26 @@
           </el-row>
         </el-header>
         <el-main id="im-main">
-
+          <div id="message-list">
+            <div
+              id="message-more"
+            >
+              加载更多
+            </div>
+            <el-card
+              class="message-card"
+              shadow="hover"
+              v-for="message of messages"
+              :key="message.id"
+            >
+              <div slot="header">
+                <span>{{message.name}}</span> <span class="message-time">{{message.date}}</span>
+              </div>
+              <div>
+                {{message.content}}
+              </div>
+            </el-card>
+          </div>
         </el-main>
       </el-container>
     </el-container>
@@ -35,13 +54,50 @@
     export default {
       data() {
         return {
-          count: 0
+          count: 0,
+          messages: [
+            {
+              id: '1',
+              name: '张三',
+              date: '2019/11/11 12:00',
+              content: 'hello, 大家好'
+            },
+            {
+              id: '2',
+              name: '张三',
+              date: '2019/11/11 12:00',
+              content: 'hello, 大家好'
+            },
+            {
+              id: '3',
+              name: '张三',
+              date: '2019/11/11 12:00',
+              content: 'hello, 大家好'
+            },
+            {
+              id: '4',
+              name: '张三',
+              date: '2019/11/11 12:00',
+              content: 'hello, 大家好'
+            },
+            {
+              id: '5',
+              name: '张三',
+              date: '2019/11/11 12:00',
+              content: 'hello, 大家好'
+            }
+          ]
         }
       },
       methods: {
         load () {
           this.count += 2
         }
+      },
+      updated() {
+        let messageList = document.getElementById('message-list');
+        messageList.scrollTop = messageList.scrollHeight;
+        console.log(messageList.scrollTop, messageList.scrollHeight)
       }
     }
 </script>
@@ -63,7 +119,11 @@
     height: 100%;
   }
 
-  .infinite-list .infinite-list-item {
+  .infinite-list {
+    padding: 0;
+  }
+
+  .infinite-list-item {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -71,6 +131,7 @@
     background: #e8f3fe;
     margin: 10px;
     color: #7dbcfc;
+    list-style: none;
   }
 
   #online-user-number {
@@ -85,5 +146,24 @@
   #im-header-right {
     min-height: 1px;
     text-align: right;
+  }
+
+  .message-card {
+    text-align: left;
+    margin: 20px;
+  }
+
+  #message-more {
+    margin: 20px;
+  }
+
+  .message-time {
+    color: #606266;
+  }
+
+  #message-list {
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
   }
 </style>
