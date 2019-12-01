@@ -27,6 +27,7 @@
           <div id="message-list">
             <div
               id="message-more"
+              @click="loadMessage"
             >
               加载更多
             </div>
@@ -92,9 +93,22 @@
       methods: {
         load () {
           this.count += 2
+        },
+        loadMessage: function () {
+          this.messages.unshift(
+            {
+              id: '6',
+              name: '新增',
+              date: '2019/12/12 12:00',
+              content: 'hello, 你好'
+            }
+          );
+          this.messages.unshift(this.messages[0]);
+          this.messages.unshift(this.messages[0]);
+          this.messages.unshift(this.messages[0]);
         }
       },
-      updated() {
+      mounted() {
         let messageList = document.getElementById('message-list');
         messageList.scrollTop = messageList.scrollHeight;
         console.log(messageList.scrollTop, messageList.scrollHeight)
