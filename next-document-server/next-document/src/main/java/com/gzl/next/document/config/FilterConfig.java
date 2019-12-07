@@ -1,7 +1,6 @@
 package com.gzl.next.document.config;
 
 import com.gzl.next.document.filter.CrosFilter;
-import com.gzl.next.document.filter.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
