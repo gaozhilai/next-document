@@ -1,6 +1,6 @@
 package com.gzl.next.document.util;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.ServletRequest;
 
 /**
  * Author: GaoZhilai
@@ -9,8 +9,8 @@ import javax.servlet.http.HttpServletRequest;
  * Description: No Description
  */
 public class UserUtil {
-    public static String getCurrentUserId(HttpServletRequest request) {
-        return (String) request.getAttribute("user_id");
+    public static Long getCurrentUserId(ServletRequest request) {
+        return (Long) request.getAttribute("userId");
     }
 }
 

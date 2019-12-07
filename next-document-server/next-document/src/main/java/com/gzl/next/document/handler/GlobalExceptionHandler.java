@@ -10,11 +10,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.ConstraintViolationException;
 import java.util.List;
 
 /**
@@ -45,6 +47,12 @@ public class GlobalExceptionHandler {
                 errorReason.append("参数").append(getSnakeCase(errotField)).append(defaultMessage);
             }
             return ResultUtil.renderFailure(SysCodeEnum.PARAMETER_ERROR, errorReason.toString());
+        }
+        if (e instanceof MissingServletRequestParameterException) {
+            return ResultUtil.renderFailure(SysCodeEnum.PARAMETER_ERROR, e.getMessage());
+        }
+        if (e instanceof ConstraintViolationException) {
+            return ResultUtil.renderFailure(SysCodeEnum.PARAMETER_ERROR, e.getMessage());
         }
         if (e instanceof UnauthorizedException) {
             return ResultUtil.renderFailure(SysCodeEnum.NOT_HAVE_PERMISSION, null);

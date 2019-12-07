@@ -12,6 +12,30 @@
     </resultMap>
     <sql id="Base_Column_List">
     id, created_on, updated_on, project_name, description, created_by, updated_by
-  </sql>
+    </sql>
 
+    <select id="getProjectList" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM doc_project
+        <where>
+            <if test="id != null and id != ''">
+                AND id = #{id}
+            </if>
+            <if test="projectName != null and projectName != ''">
+                AND project_name LIKE CONCAT(CONCAT('%', #{projectName}), '%')
+            </if>
+            <if test="description != null and description != ''">
+                AND description  LIKE CONCAT(CONCAT('%', #{description}), '%')
+            </if>
+        </where>
+    </select>
+
+    <insert id="createProject">
+        INSERT INTO doc_project (
+        created_on, updated_on, project_name, description, created_by, updated_by
+        )
+        VALUE (
+        NOW(), NOW(), #{projectName}, #{description}, #{createdBy}, #{updatedBy}
+        )
+    </insert>
 </mapper>

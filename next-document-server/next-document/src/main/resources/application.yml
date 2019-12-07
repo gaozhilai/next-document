@@ -1,6 +1,7 @@
 spring:
   profiles:
     active: dev
+# Jackson 配置
   jackson:
     property-naming-strategy: SNAKE_CASE
     default-property-inclusion: always
@@ -14,4 +15,9 @@ server:
 # Mybatis mapper.xml位置配置
 mybatis:
   mapper-locations: classpath:/mapper/*.xml
-# Jackson 配置
+# PageHelper配置
+pagehelper:
+  helper-dialect: mysql
+  reasonable: true
+  support-methods-arguments: true
+  params: count=countSql

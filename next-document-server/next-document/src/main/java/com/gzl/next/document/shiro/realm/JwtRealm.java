@@ -25,6 +25,7 @@ import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.servlet.ServletRequest;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -75,6 +76,9 @@ public class JwtRealm extends AuthorizingRealm {
         if (!user.getValid()) {
             throw new AuthenticationException(new SysException(SysCodeEnum.ACCOUNT_BLOCKED));
         }
+        JwtToken jwtToken = (JwtToken) authenticationToken;
+        ServletRequest request = jwtToken.getRequest();
+        request.setAttribute("userId", user.getId());
         return new SimpleAuthenticationInfo(token, token, "JwtRealm");
     }
 }
