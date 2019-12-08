@@ -5,7 +5,6 @@ import com.gzl.next.document.exception.SysException;
 import com.gzl.next.document.mapper.AccountUserMapper;
 import com.gzl.next.document.pojo.dto.RolePermissionDTO;
 import com.gzl.next.document.pojo.entity.AccountUser;
-import com.gzl.next.document.pojo.query.UserQUERY;
 import com.gzl.next.document.pojo.vo.LoginVO;
 import com.gzl.next.document.util.CommonResult;
 import com.gzl.next.document.util.JwtUtil;
@@ -21,6 +20,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.NotBlank;
+
 /**
  * @author GaoZhilai
  * @date 19/11/16
@@ -28,24 +29,26 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/user")
+@Validated
 public class UserController {
     @Autowired
     private AccountUserMapper accountUserMapper;
 
-    @PostMapping("/login")
-    public ResponseEntity<CommonResult<LoginVO>> login(@Validated({SelectGroup.class}) @RequestBody UserQUERY param) {
-        AccountUser user = accountUserMapper.getAccountUserByLoginName(param.getLoginName());
+    @GetMapping("/login")
+    public ResponseEntity<CommonResult<LoginVO>> login(@NotBlank @RequestParam("login_name") String loginName,
+                                                       @NotBlank @RequestParam("password") String password) {
+        AccountUser user = accountUserMapper.getAccountUserByLoginName(loginName);
         if (user == null) {
             throw new SysException(SysCodeEnum.USER_NAME_OR_PASSWORD_ERROR);
         }
         String salt = user.getSalt();
-        String paramPassword = JwtUtil.getRealPwd(param.getPassword(), salt);
+        String paramPassword = JwtUtil.getRealPwd(password, salt);
         String realPassword = user.getPassword();
         if (!StringUtils.equals(paramPassword, realPassword)) {
             throw new SysException(SysCodeEnum.USER_NAME_OR_PASSWORD_ERROR);
         }
         String token = JwtUtil.generateToken(user.getLoginName());
-        RolePermissionDTO rolePermissionDTO = UserCache.permissionCache.getUnchecked(param.getLoginName());
+        RolePermissionDTO rolePermissionDTO = UserCache.permissionCache.getUnchecked(loginName);
         LoginVO loginVO = LoginVO
                 .builder()
                 .token(token)

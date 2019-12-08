@@ -38,4 +38,11 @@
         NOW(), NOW(), #{projectName}, #{description}, #{createdBy}, #{updatedBy}
         )
     </insert>
+
+    <select id="getProjectById" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM doc_project
+        WHERE
+        id = #{id}
+    </select>
 </mapper>

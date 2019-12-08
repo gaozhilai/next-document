@@ -37,6 +37,7 @@ public class GlobalExceptionHandler {
             return ResultUtil.renderFailure(sysException.getSysCodeEnum(), null);
         }
         if (e instanceof MethodArgumentNotValidException) {
+            e.printStackTrace();
             MethodArgumentNotValidException validException = (MethodArgumentNotValidException) e;
             List<FieldError> errors = validException.getBindingResult().getFieldErrors();
             StringBuffer errorReason = new StringBuffer("请求参数错误:");
@@ -49,9 +50,11 @@ public class GlobalExceptionHandler {
             return ResultUtil.renderFailure(SysCodeEnum.PARAMETER_ERROR, errorReason.toString());
         }
         if (e instanceof MissingServletRequestParameterException) {
+            e.printStackTrace();
             return ResultUtil.renderFailure(SysCodeEnum.PARAMETER_ERROR, e.getMessage());
         }
         if (e instanceof ConstraintViolationException) {
+            e.printStackTrace();
             return ResultUtil.renderFailure(SysCodeEnum.PARAMETER_ERROR, e.getMessage());
         }
         if (e instanceof UnauthorizedException) {

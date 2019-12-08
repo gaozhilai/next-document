@@ -2,9 +2,11 @@ package com.gzl.next.document.controller;
 
 import com.gzl.next.document.pojo.entity.DocProject;
 import com.gzl.next.document.pojo.form.ProjectForm;
-import com.gzl.next.document.pojo.query.ProjectQUERY;
+import com.gzl.next.document.pojo.vo.ProjectDetailVO;
+import com.gzl.next.document.pojo.vo.ProjectVO;
 import com.gzl.next.document.service.ProjectService;
 import com.gzl.next.document.util.*;
+import com.gzl.next.document.validate.InsertGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 /**
  * @author GaoZhilai
@@ -26,12 +29,12 @@ public class ProjectController {
     private ProjectService projectService;
 
     @GetMapping("/projects")
-    public ResponseEntity<CommonResult<PageData<DocProject>>> getProjectList(@Min(1) @RequestParam("page") Integer page,
-                                                                             @Max(500) @RequestParam("size") Integer size,
-                                                                             @RequestParam(value = "id", required = false) Long id,
-                                                                             @RequestParam(value = "project_name", required = false) String projectName,
-                                                                             @RequestParam(value = "description", required = false) String description) {
-        PageData<DocProject> projectList = projectService.getProjectList(page, size, id, projectName, description);
+    public ResponseEntity<CommonResult<PageData<ProjectVO>>> getProjectList(@Min(1) @RequestParam("page") Integer page,
+                                                                            @Max(500) @RequestParam("size") Integer size,
+                                                                            @RequestParam(value = "id", required = false) Long id,
+                                                                            @RequestParam(value = "project_name", required = false) String projectName,
+                                                                            @RequestParam(value = "description", required = false) String description) {
+        PageData<ProjectVO> projectList = projectService.getProjectList(page, size, id, projectName, description);
         return ResultUtil.renderSuccess(projectList);
     }
 
@@ -44,5 +47,11 @@ public class ProjectController {
         } else {
             return ResultUtil.renderFailure("创建项目失败");
         }
+    }
+
+    @GetMapping("/project")
+    public ResponseEntity<CommonResult<ProjectDetailVO>> getProjectById(@NotNull @RequestParam("project_id") Long projectId) {
+        ProjectDetailVO projectById = projectService.getProjectById(projectId);
+        return ResultUtil.renderSuccess(projectById);
     }
 }

@@ -1,7 +1,6 @@
 package com.gzl.next.document.mapper;
 
 import com.gzl.next.document.pojo.entity.DocProject;
-import com.gzl.next.document.pojo.query.ProjectQUERY;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -37,4 +36,11 @@ public interface DocProjectMapper {
                       @Param("description") String description,
                       @Param("createdBy") Long createdBy,
                       @Param("updatedBy") Long updatedBy);
+
+    /**
+     * 根据id查询项目详情
+     * @param id 项目id
+     * @return 项目详情
+     */
+    DocProject getProjectById(@Param("id") Long id);
 }
