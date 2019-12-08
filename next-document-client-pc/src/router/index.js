@@ -13,6 +13,7 @@ const VoteList = () => import('@/views/vote/components/VoteList');
 const UserList = () => import('@/views/user/UserList');
 const InstantMessaging = () => import('@/views/message/im/InstantMessaging');
 const Personal = () => import('@/views/personal/Personal');
+const Login = () => import('@/views/login/Login');
 
 Vue.use(Router)
 
@@ -22,6 +23,11 @@ export default new Router({
       path: '/',
       name: 'Layout',
       component: Layout
+    },
+    {
+      path: '/login',
+      name: 'Login',
+      component: Login
     },
     {
       path: '/sharing_table',

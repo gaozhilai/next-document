@@ -5,6 +5,10 @@ import App from './App';
 import router from './router';
 import axios from './util/axios';
 import ElementUI from 'element-ui';
+// 样式重置css
+import './css/reset.css'
+// 边框css
+import './css/border.css'
 // 引入主题样式
 import './index.less';
 // elementUI默认样式
