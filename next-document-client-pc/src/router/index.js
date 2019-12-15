@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import {getToken} from "../util/userInfo";
 const DocumentPanel = () => import('@/views//document/essay/DocumentPanel');
 const ProjectPanel = () => import('@/views/project/ProjectPanel');
 const ProjectList = () => import('@/views/project/ProjectList');
@@ -15,9 +16,9 @@ const InstantMessaging = () => import('@/views/message/im/InstantMessaging');
 const Personal = () => import('@/views/personal/Personal');
 const Login = () => import('@/views/login/Login');
 
-Vue.use(Router)
+Vue.use(Router);
 
-export default new Router({
+let router = new Router({
   routes: [
     {
       path: '/',
@@ -57,4 +58,15 @@ export default new Router({
       ]
     }
   ]
-})
+});
+
+router.beforeEach((to, from, next) => {
+  let token = getToken();
+  if (!token && to.path !== '/login') {
+    next('/login')
+    return;
+  }
+  next();
+});
+
+export default router;

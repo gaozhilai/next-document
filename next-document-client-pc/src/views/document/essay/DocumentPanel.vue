@@ -58,7 +58,7 @@
 </template>
 
 <script>
-  import {success} from "../../../util/notify";
+  import {successMsg} from "../../../util/notify";
 
   export default {
     data() {
@@ -117,7 +117,7 @@
         this.preview = !this.preview;
       },
       save: function () {
-        success("您的文档已保存至服务器", "保存成功")
+        successMsg("您的文档已保存至服务器", "保存成功")
       },
       saveAndPreview: function () {
         this.save();

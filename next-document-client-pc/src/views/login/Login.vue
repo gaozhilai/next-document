@@ -7,13 +7,13 @@
       <div id="login-card-body">
         <div id="login-box">
           <div id="login-name">
-            <el-input v-model="input" placeholder="请输入用户名"></el-input>
+            <el-input v-model="formData.loginName" placeholder="请输入用户名"></el-input>
           </div>
           <div id="password">
-            <el-input v-model="input" placeholder="请输入密码"></el-input>
+            <el-input v-model="formData.password" placeholder="请输入密码"></el-input>
           </div>
           <div id="button-box">
-            <el-button type="primary">登录</el-button>
+            <el-button type="primary" @click="login">登录</el-button>
           </div>
         </div>
       </div>
@@ -22,14 +22,46 @@
 </template>
 
 <script>
+    import {successMsg} from "../../util/notify";
+    import {setPermission, setRole, setToken} from "../../util/userInfo";
+
     export default {
-        name: "Login"
+      data() {
+        return {
+          formData: {
+            loginName: '',
+            password: '',
+          }
+        };
+      },
+      methods: {
+        login: function () {
+          this.$axios.get("/user/login", {
+            params: {
+              login_name: this.formData.loginName,
+              password: this.formData.password
+            }
+          }).then(res => {
+            let data = res.data;
+            let msg = data.msg;
+            successMsg(msg, '登录成功');
+            let token = data.data.token;
+            setToken(token);
+            let roleAndPermission = data.data.role_and_permission;
+            let roles = roleAndPermission.roles;
+            let permissions = roleAndPermission.permissions;
+            setRole(roles);
+            setPermission(permissions);
+            this.$router.push('/layout/project_panel');
+          });
+        }
+      }
     }
 </script>
 
 <style scoped>
   #login {
-    background-color: #67C23A;
+    background: linear-gradient(45deg, #fff, #333);
     height: 100%;
     display: flex;
     justify-items: center;
@@ -38,7 +70,8 @@
   }
   #login-card {
     width: 50%;
-    max-width: 400px;
+    max-width: 420px;
+    min-width: 380px;
   }
   #button-box {
     text-align: right;

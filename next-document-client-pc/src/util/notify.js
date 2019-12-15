@@ -4,11 +4,11 @@ import Vue from 'vue'
  * @param message 内容
  * @param [title] 标题
  */
-export function success(message, title) {
+export function successMsg(message, title) {
   Vue.prototype.$notify.success({
     title: title,
     message: message,
-    position: 'bottom-right'
+    position: 'top-right'
   });
 }
 
@@ -17,11 +17,11 @@ export function success(message, title) {
  * @param message 内容
  * @param [title] 标题
  */
-export function warning(message, title) {
+export function warningMsg(message, title) {
   Vue.prototype.$notify.warning({
     title: title,
     message: message,
-    position: 'bottom-right'
+    position: 'top-right'
   });
 }
 
@@ -30,11 +30,11 @@ export function warning(message, title) {
  * @param message 内容
  * @param [title] 标题
  */
-export function info(message, title) {
+export function infoMsg(message, title) {
   Vue.prototype.$notify.info({
     title: title,
     message: message,
-    position: 'bottom-right'
+    position: 'top-right'
   });
 }
 
@@ -43,10 +43,10 @@ export function info(message, title) {
  * @param message 内容
  * @param [title] 标题
  */
-export function error(message, title) {
+export function errorMsg(message, title) {
   Vue.prototype.$notify.error({
     title: title,
     message: message,
-    position: 'bottom-right'
+    position: 'top-right'
   });
 }
