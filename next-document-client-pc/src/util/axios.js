@@ -7,18 +7,18 @@ const instance = axios.create({
   baseURL: 'http://127.0.0.1:9100/next_document'
 });
 
-// instance.interceptors.request.use(
-//   config => {
-//     let token = getToken();
-//     if (!token) {
-//       // 跳转登录页
-//       router.push("/login");
-//       return;
-//     }
-//     config.headers.Token = token;
-//     return config;
-//   }
-// );
+instance.interceptors.request.use(
+  config => {
+    let token = getToken();
+    // if (!token) {
+    //   // 跳转登录页
+    //   router.push("/login");
+    //   return;
+    // }
+    config.headers['Token'] = token;
+    return config;
+  }
+);
 
 instance.interceptors.response.use(response => {
   return response;

@@ -42,6 +42,9 @@
               password: this.formData.password
             }
           }).then(res => {
+            if (!res) {
+              return;
+            }
             let data = res.data;
             let msg = data.msg;
             successMsg(msg, '登录成功');

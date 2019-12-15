@@ -13,7 +13,7 @@ export function getUserInfo() {
 }
 
 export function setUserInfo(userInfo) {
-  vueCookies.set('token', userInfo, -1);
+  vueCookies.set('userInfo', userInfo, -1);
 }
 
 export function getRole() {
@@ -29,5 +29,5 @@ export function getPermission(permission) {
 }
 
 export function setPermission(permission) {
-  vueCookies.set('token', permission, -1);
+  vueCookies.set('permission', permission, -1);
 }
