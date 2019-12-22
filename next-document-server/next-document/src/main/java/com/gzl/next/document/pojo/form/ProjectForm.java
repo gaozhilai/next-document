@@ -3,6 +3,7 @@ package com.gzl.next.document.pojo.form;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 /**
  * @author GaoZhilai
@@ -15,4 +16,6 @@ public class ProjectForm {
     private String projectName;
     @NotBlank
     private String description;
+    @NotNull
+    private Boolean privateProject;
 }

@@ -42,4 +42,9 @@ public class AccountUser extends BaseEntity {
      * 邮箱
      */
     private String email;
+
+    /**
+     * 0保密, 1男, 2女
+     */
+    private Short gender;
 }

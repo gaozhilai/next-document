@@ -30,12 +30,14 @@ public interface DocProjectMapper {
      * @param description 项目描述
      * @param createdBy 创建者id
      * @param updatedBy 更新者id
+     * @param privateProject 1私人项目, 0公共项目
      * @return
      */
     int createProject(@Param("projectName") String projectName,
                       @Param("description") String description,
                       @Param("createdBy") Long createdBy,
-                      @Param("updatedBy") Long updatedBy);
+                      @Param("updatedBy") Long updatedBy,
+                      @Param("privateProject") Boolean privateProject);
 
     /**
      * 根据id查询项目详情

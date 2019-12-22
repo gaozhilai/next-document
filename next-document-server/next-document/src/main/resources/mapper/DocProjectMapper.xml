@@ -9,9 +9,10 @@
         <result column="description" property="description" jdbcType="VARCHAR"/>
         <result column="created_by" property="createdBy" jdbcType="BIGINT"/>
         <result column="updated_by" property="updatedBy" jdbcType="BIGINT"/>
+        <result column="private_project" property="privateProject" jdbcType="BIT"/>
     </resultMap>
     <sql id="Base_Column_List">
-    id, created_on, updated_on, project_name, description, created_by, updated_by
+    id, created_on, updated_on, project_name, description, created_by, updated_by, private_project
     </sql>
 
     <select id="getProjectList" resultMap="BaseResultMap">
@@ -32,10 +33,10 @@
 
     <insert id="createProject">
         INSERT INTO doc_project (
-        created_on, updated_on, project_name, description, created_by, updated_by
+        created_on, updated_on, project_name, description, created_by, updated_by, privateProject
         )
         VALUE (
-        NOW(), NOW(), #{projectName}, #{description}, #{createdBy}, #{updatedBy}
+        NOW(), NOW(), #{projectName}, #{description}, #{createdBy}, #{updatedBy}, #{privateProject}
         )
     </insert>
 

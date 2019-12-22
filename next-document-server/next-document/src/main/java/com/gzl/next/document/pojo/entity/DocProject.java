@@ -26,4 +26,9 @@ public class DocProject extends BaseEntity {
      * 项目信息更新者
      */
     private Long updatedBy;
+
+    /**
+     * 是否为个人项目
+     */
+    private Boolean privateProject;
 }

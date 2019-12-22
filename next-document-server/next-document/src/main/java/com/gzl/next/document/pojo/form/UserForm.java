@@ -20,4 +20,5 @@ public class UserForm {
     private String avatar;
     private String phone;
     private String email;
+    private Short gender;
 }

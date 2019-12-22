@@ -32,5 +32,6 @@ public interface AccountUserMapper {
      */
     int addUser(@Param("loginName") String loginName, @Param("nickname") String nickname,
                 @Param("password") String password, @Param("salt") String salt, @Param("valid") Integer valid,
-                @Param("avatar") String avatar, @Param("phone") String phone, @Param("email") String email);
+                @Param("avatar") String avatar, @Param("phone") String phone, @Param("email") String email,
+                @Param("gender") Short gender);
 }

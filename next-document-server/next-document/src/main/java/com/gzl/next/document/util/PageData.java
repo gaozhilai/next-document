@@ -50,4 +50,16 @@ public class PageData<T> {
         pageData.pageData = list;
         return pageData;
     }
+
+    public static<T, R> PageData<R> converPageData(List<T> list, List<R> listVO) {
+        PageData<R> pageData = new PageData<>();
+        PageInfo<T> pageInfo = new PageInfo<>(list);
+        pageData.pageNum = pageInfo.getPageNum();
+        pageData.pageSize = pageInfo.getPageSize();
+        pageData.pages = pageInfo.getPages();
+        pageData.isFirstPage = pageInfo.isIsFirstPage();
+        pageData.isLastPage = pageInfo.isIsLastPage();
+        pageData.pageData = listVO;
+        return pageData;
+    }
 }

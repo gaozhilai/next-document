@@ -38,14 +38,14 @@ public class ProjectServiceImpl implements ProjectService {
             BeanUtils.copyProperties(docProject, temp);
             projectVOS.add(temp);
         }
-        PageData<ProjectVO> docProjectPageData = PageData.converPageData(projectVOS);
-        return docProjectPageData;
+        PageData<ProjectVO> projectVoPageData = PageData.converPageData(projectList, projectVOS);
+        return projectVoPageData;
     }
 
     @Override
     public int createProject(ProjectForm projectForm, Long createdBy, Long updatedBy) {
         int result = projectMapper.createProject(projectForm.getProjectName(),
-                projectForm.getDescription(), createdBy, updatedBy);
+                projectForm.getDescription(), createdBy, updatedBy, projectForm.getPrivateProject());
         return result;
     }
 

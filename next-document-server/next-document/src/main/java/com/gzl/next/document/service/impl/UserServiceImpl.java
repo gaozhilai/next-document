@@ -95,7 +95,8 @@ public class UserServiceImpl implements UserService {
         String salt = RandomStringUtils.randomAlphanumeric(64);
         String realPwd = UserUtil.getRealPwd(userForm.getPassword(), salt);
         int res = accountUserMapper.addUser(userForm.getLoginName(), userForm.getNickname(), realPwd,
-                salt, CommonStatusEnum.VALID.getCode(), userForm.getAvatar(), userForm.getPhone(), userForm.getEmail());
+                salt, CommonStatusEnum.VALID.getCode(), userForm.getAvatar(), userForm.getPhone(), userForm.getEmail(),
+                userForm.getGender());
         return res;
     }
 }

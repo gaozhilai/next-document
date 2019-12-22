@@ -12,10 +12,11 @@
         <result column="avatar" property="avatar" jdbcType="VARCHAR"/>
         <result column="phone" property="phone" jdbcType="VARCHAR"/>
         <result column="email" property="email" jdbcType="VARCHAR"/>
+        <result column="gender" property="gender" jdbcType="BIT"/>
     </resultMap>
     <sql id="Base_Column_List">
     id, created_on, updated_on, login_name, nickname, password, salt, valid, avatar, phone,
-    email
+    email, gender
   </sql>
 
     <select id="getAccountUserByLoginName" resultMap="BaseResultMap">
@@ -28,10 +29,10 @@
 
     <insert id="addUser">
         INSERT INTO account_user (
-          created_on, updated_on, login_name, nickname, password, salt, valid, avatar, phone, email
+          created_on, updated_on, login_name, nickname, password, salt, valid, avatar, phone, email, gender
         )
         VALUE (
-          NOW(), NOW(), #{loginName}, #{nickname}, #{password}, #{salt}, #{valid}, #{avatar}, #{phone}, #{email}
+          NOW(), NOW(), #{loginName}, #{nickname}, #{password}, #{salt}, #{valid}, #{avatar}, #{phone}, #{email}, #{gender}
         )
     </insert>
 </mapper>
