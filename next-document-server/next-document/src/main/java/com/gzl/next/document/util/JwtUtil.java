@@ -25,7 +25,6 @@ import java.util.Date;
 @Slf4j
 @Component
 public class JwtUtil {
-    static final String SECRET = "next_document";
     private static int expiration;
 
     @Value("${token.expiration.days}")
@@ -33,9 +32,9 @@ public class JwtUtil {
         JwtUtil.expiration = expiration;
     }
 
-    public static String generateToken(String loginName) {
+    public static String generateToken(String loginName, String secret) {
         Date expirationDate = new DateTime().plusDays(expiration).toDate();
-        Algorithm algorithm = Algorithm.HMAC256(SECRET);
+        Algorithm algorithm = Algorithm.HMAC256(secret);
         String token = JWT.create()
                 .withClaim("login_name", loginName)
                 //到期时间
@@ -45,11 +44,11 @@ public class JwtUtil {
         return token;
     }
 
-    public static String validateToken(String token) {
+    public static String validateToken(String token, String salt) {
         try {
             DecodedJWT jwt = JWT.decode(token);
             String loginName = jwt.getClaim("login_name").asString();
-            Algorithm algorithm = Algorithm.HMAC256(SECRET);
+            Algorithm algorithm = Algorithm.HMAC256(salt);
             //在token中附带了username信息
             JWTVerifier verifier = JWT.require(algorithm).build();
             verifier.verify(token);

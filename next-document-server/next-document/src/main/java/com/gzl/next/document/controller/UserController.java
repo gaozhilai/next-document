@@ -47,7 +47,7 @@ public class UserController {
         if (!StringUtils.equals(paramPassword, realPassword)) {
             throw new SysException(SysCodeEnum.USER_NAME_OR_PASSWORD_ERROR);
         }
-        String token = JwtUtil.generateToken(user.getLoginName());
+        String token = JwtUtil.generateToken(user.getLoginName(), salt);
         RolePermissionDTO rolePermissionDTO = UserCache.permissionCache.getUnchecked(loginName);
         LoginVO loginVO = LoginVO
                 .builder()

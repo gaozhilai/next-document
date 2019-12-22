@@ -12,7 +12,6 @@ import javax.servlet.ServletRequest;
 @AllArgsConstructor
 public class JwtToken implements AuthenticationToken {
     private String token;
-    private ServletRequest request;
 
     @Override
     public Object getPrincipal() {
@@ -22,9 +21,5 @@ public class JwtToken implements AuthenticationToken {
     @Override
     public Object getCredentials() {
         return token;
-    }
-
-    public ServletRequest getRequest() {
-        return request;
     }
 }

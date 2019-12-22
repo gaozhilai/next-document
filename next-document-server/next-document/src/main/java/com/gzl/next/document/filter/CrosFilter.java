@@ -1,7 +1,10 @@
 package com.gzl.next.document.filter;
 
 import com.gzl.next.document.exception.SysException;
+import com.gzl.next.document.pojo.entity.AccountUser;
+import com.gzl.next.document.util.JwtUtil;
 import com.gzl.next.document.util.ResultUtil;
+import com.gzl.next.document.util.UserCache;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -32,6 +35,12 @@ public class CrosFilter extends OncePerRequestFilter {
         if(request.getMethod().equals(RequestMethod.OPTIONS.name())) {
             response.setStatus(HttpStatus.OK.value());
             return ;
+        }
+        String token = request.getHeader("token");
+        String loginName = JwtUtil.getClaim(token);
+        AccountUser user = UserCache.userCache.getUnchecked(loginName);
+        if (user != null) {
+            request.setAttribute("userId", user.getId());
         }
         try {
             filterChain.doFilter(request, response);

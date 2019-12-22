@@ -39,9 +39,6 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 public class JwtRealm extends AuthorizingRealm {
-    @Autowired
-    private UserService userService;
-
     @Override
     public boolean supports(AuthenticationToken token) {
         return token instanceof JwtToken;
@@ -67,18 +64,19 @@ public class JwtRealm extends AuthorizingRealm {
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
         log.info("账户登录名密码验证方法");
         String token = (String) authenticationToken.getCredentials();
-        String loginName = JwtUtil.validateToken(token);
+        String loginName = JwtUtil.getClaim(token);
         if (loginName == null) {
             // token验证失败
             throw new AuthenticationException(new SysException(SysCodeEnum.TOKEN_ERROR));
         }
         AccountUser user = UserCache.userCache.getUnchecked(loginName);
+        if (user == null) {
+            throw new AuthenticationException(new SysException(SysCodeEnum.USER_NAME_OR_PASSWORD_ERROR));
+        }
+        JwtUtil.validateToken(token, user.getSalt());
         if (!user.getValid()) {
             throw new AuthenticationException(new SysException(SysCodeEnum.ACCOUNT_BLOCKED));
         }
-        JwtToken jwtToken = (JwtToken) authenticationToken;
-        ServletRequest request = jwtToken.getRequest();
-        request.setAttribute("userId", user.getId());
         return new SimpleAuthenticationInfo(token, token, "JwtRealm");
     }
 }

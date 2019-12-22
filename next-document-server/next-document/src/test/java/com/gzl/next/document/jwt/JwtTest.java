@@ -13,12 +13,12 @@ import org.junit.Test;
 public class JwtTest extends BaseTest {
     @Test
     public void testGenerateToken() {
-        String token = JwtUtil.generateToken("gzl");
+        String token = JwtUtil.generateToken("gzl", "salt1024");
         log.info("获取到Token为, {}", token);
         DecodedJWT jwt = JWT.decode(token);
         String loginName = jwt.getClaim("login_name").asString();
         log.info("没有秘钥获得token中信息为, {}", loginName);
-        String res = JwtUtil.validateToken(token);
+        String res = JwtUtil.validateToken(token, "next_document");
         log.info("token验证通过, {}", res);
     }
 
