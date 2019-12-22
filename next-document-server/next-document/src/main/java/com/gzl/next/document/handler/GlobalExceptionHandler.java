@@ -1,5 +1,6 @@
 package com.gzl.next.document.handler;
 
+import com.google.common.base.CaseFormat;
 import com.gzl.next.document.enums.SysCodeEnum;
 import com.gzl.next.document.exception.SysException;
 import com.gzl.next.document.util.CommonResult;
@@ -68,20 +69,7 @@ public class GlobalExceptionHandler {
     }
 
     private String getSnakeCase(String param) {
-        if (param==null||"".equals(param.trim())){
-            return "";
-        }
-        int len=param.length();
-        StringBuilder sb=new StringBuilder(len);
-        for (int i = 0; i < len; i++) {
-            char c=param.charAt(i);
-            if (Character.isUpperCase(c)){
-                sb.append("_");
-                sb.append(Character.toLowerCase(c));
-            }else{
-                sb.append(c);
-            }
-        }
-        return sb.toString();
+        String to = CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, param);
+        return to;
     }
 }

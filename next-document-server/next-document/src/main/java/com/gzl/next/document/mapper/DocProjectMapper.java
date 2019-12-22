@@ -43,4 +43,15 @@ public interface DocProjectMapper {
      * @return 项目详情
      */
     DocProject getProjectById(@Param("id") Long id);
+
+    /**
+     * 更新项目信息
+     * @param id 项目id
+     * @param projectName 项目名称
+     * @param description 项目描述
+     * @param updatedBy 更新者id
+     * @return 返回1为成功
+     */
+    int updateProjectById(@Param("id") Long id, @Param("projectName") String projectName,
+                          @Param("description") String description, @Param("updatedBy") Long updatedBy);
 }

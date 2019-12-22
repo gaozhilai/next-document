@@ -2,6 +2,7 @@ package com.gzl.next.document.service;
 
 import com.gzl.next.document.pojo.entity.DocProject;
 import com.gzl.next.document.pojo.form.ProjectForm;
+import com.gzl.next.document.pojo.form.UpdateProjectForm;
 import com.gzl.next.document.pojo.vo.ProjectDetailVO;
 import com.gzl.next.document.pojo.vo.ProjectVO;
 import com.gzl.next.document.util.PageData;
@@ -40,4 +41,12 @@ public interface ProjectService {
      * @return 项目详情
      */
     ProjectDetailVO getProjectById(Long id);
+
+    /**
+     * 更新项目信息
+     * @param projectForm 项目信息
+     * @param updatedBy 更新者id
+     * @return 1成功
+     */
+    int updateProjectById(UpdateProjectForm projectForm, Long updatedBy);
 }

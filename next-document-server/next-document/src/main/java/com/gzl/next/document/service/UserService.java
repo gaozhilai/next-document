@@ -2,6 +2,8 @@ package com.gzl.next.document.service;
 
 import com.gzl.next.document.pojo.dto.RolePermissionDTO;
 import com.gzl.next.document.pojo.entity.AccountUser;
+import com.gzl.next.document.pojo.form.UserForm;
+import com.gzl.next.document.pojo.vo.LoginVO;
 
 /**
  * @author GaoZhilai
@@ -22,4 +24,19 @@ public interface UserService {
      * @return
      */
     RolePermissionDTO getAvailableRoleAndPermission(String loginName);
+
+    /**
+     * 登录
+     * @param loginName 登录名
+     * @param password 密码
+     * @return 登录结果, 包含token 和权限角色等信息
+     */
+    LoginVO signIn(String loginName, String password);
+
+    /**
+     * 新增, 注册用户
+     * @param userForm 用户信息
+     * @return 1成功
+     */
+    int signUp(UserForm userForm);
 }

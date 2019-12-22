@@ -70,18 +70,4 @@ public class JwtUtil {
         String loginName = jwt.getClaim("login_name").asString();
         return loginName;
     }
-
-    /**
-     * 通过盐值和密码获得数据库中存储的加密后的密码
-     * @param password
-     * @param salt
-     * @return
-     */
-    public static String getRealPwd(String password, String salt) {
-        // 加密算法MD5
-        // 迭代次数
-        String md5Pwd = new SimpleHash("MD5", password,
-                ByteSource.Util.bytes(salt), 2).toHex();
-        return md5Pwd;
-    }
 }

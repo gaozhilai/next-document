@@ -2,11 +2,13 @@ package com.gzl.next.document.controller;
 
 import com.gzl.next.document.pojo.entity.DocProject;
 import com.gzl.next.document.pojo.form.ProjectForm;
+import com.gzl.next.document.pojo.form.UpdateProjectForm;
 import com.gzl.next.document.pojo.vo.ProjectDetailVO;
 import com.gzl.next.document.pojo.vo.ProjectVO;
 import com.gzl.next.document.service.ProjectService;
 import com.gzl.next.document.util.*;
 import com.gzl.next.document.validate.InsertGroup;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -53,5 +55,20 @@ public class ProjectController {
     public ResponseEntity<CommonResult<ProjectDetailVO>> getProjectById(@NotNull @RequestParam("project_id") Long projectId) {
         ProjectDetailVO projectById = projectService.getProjectById(projectId);
         return ResultUtil.renderSuccess(projectById);
+    }
+
+    @PutMapping("/project")
+    public ResponseEntity<CommonResult> updateProjectById(HttpServletRequest request,
+                                                          @Validated @RequestBody UpdateProjectForm projectForm) {
+        if (StringUtils.isBlank(projectForm.getProjectName()) && StringUtils.isBlank(projectForm.getDescription())) {
+            return ResultUtil.renderFailure("要更新的项目信息不能都为空");
+        }
+        Long currentUserId = UserUtil.getCurrentUserId(request);
+        int res = projectService.updateProjectById(projectForm, currentUserId);
+        if (res > 0) {
+            return ResultUtil.renderSuccess("更新项目信息成功");
+        } else {
+            return ResultUtil.renderSuccess("更新项目信息失败");
+        }
     }
 }

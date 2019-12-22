@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.gzl.next.document.base.BaseTest;
 import com.gzl.next.document.util.JwtUtil;
+import com.gzl.next.document.util.UserUtil;
 import org.junit.Test;
 
 /**
@@ -24,7 +25,7 @@ public class JwtTest extends BaseTest {
 
     @Test
     public void testGeneratePassword() {
-        String password = JwtUtil.getRealPwd("123", "salt1024");
+        String password = UserUtil.getRealPwd("123", "salt1024");
         log.info("password {}", password);
     }
 }

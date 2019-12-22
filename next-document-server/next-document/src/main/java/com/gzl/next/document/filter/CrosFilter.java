@@ -6,6 +6,7 @@ import com.gzl.next.document.util.JwtUtil;
 import com.gzl.next.document.util.ResultUtil;
 import com.gzl.next.document.util.UserCache;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -37,10 +38,12 @@ public class CrosFilter extends OncePerRequestFilter {
             return ;
         }
         String token = request.getHeader("token");
-        String loginName = JwtUtil.getClaim(token);
-        AccountUser user = UserCache.userCache.getUnchecked(loginName);
-        if (user != null) {
-            request.setAttribute("userId", user.getId());
+        if (!StringUtils.isBlank(token)) {
+            String loginName = JwtUtil.getClaim(token);
+            AccountUser user = UserCache.userCache.getUnchecked(loginName);
+            if (user != null) {
+                request.setAttribute("userId", user.getId());
+            }
         }
         try {
             filterChain.doFilter(request, response);

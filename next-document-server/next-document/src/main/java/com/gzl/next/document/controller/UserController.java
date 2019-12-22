@@ -5,7 +5,9 @@ import com.gzl.next.document.exception.SysException;
 import com.gzl.next.document.mapper.AccountUserMapper;
 import com.gzl.next.document.pojo.dto.RolePermissionDTO;
 import com.gzl.next.document.pojo.entity.AccountUser;
+import com.gzl.next.document.pojo.form.UserForm;
 import com.gzl.next.document.pojo.vo.LoginVO;
+import com.gzl.next.document.service.UserService;
 import com.gzl.next.document.util.CommonResult;
 import com.gzl.next.document.util.JwtUtil;
 import com.gzl.next.document.util.ResultUtil;
@@ -32,29 +34,23 @@ import javax.validation.constraints.NotBlank;
 @Validated
 public class UserController {
     @Autowired
-    private AccountUserMapper accountUserMapper;
+    private UserService userService;
 
-    @GetMapping("/login")
+    @GetMapping("/sign_in")
     public ResponseEntity<CommonResult<LoginVO>> login(@NotBlank @RequestParam("login_name") String loginName,
                                                        @NotBlank @RequestParam("password") String password) {
-        AccountUser user = accountUserMapper.getAccountUserByLoginName(loginName);
-        if (user == null) {
-            throw new SysException(SysCodeEnum.USER_NAME_OR_PASSWORD_ERROR);
-        }
-        String salt = user.getSalt();
-        String paramPassword = JwtUtil.getRealPwd(password, salt);
-        String realPassword = user.getPassword();
-        if (!StringUtils.equals(paramPassword, realPassword)) {
-            throw new SysException(SysCodeEnum.USER_NAME_OR_PASSWORD_ERROR);
-        }
-        String token = JwtUtil.generateToken(user.getLoginName(), salt);
-        RolePermissionDTO rolePermissionDTO = UserCache.permissionCache.getUnchecked(loginName);
-        LoginVO loginVO = LoginVO
-                .builder()
-                .token(token)
-                .roleAndPermission(rolePermissionDTO)
-                .build();
+        LoginVO loginVO = userService.signIn(loginName, password);
         return ResultUtil.renderSuccess("登录成功", loginVO);
+    }
+
+    @PostMapping("/sign_up")
+    public ResponseEntity<CommonResult> signUp(@Validated @RequestBody UserForm userForm) {
+        int res = userService.signUp(userForm);
+        if (res > 0) {
+            return ResultUtil.renderSuccess("用户注册成功");
+        } else {
+            return ResultUtil.renderSuccess("用户注册失败");
+        }
     }
 
     @RequiresRoles(logical = Logical.OR, value = {"admin"})

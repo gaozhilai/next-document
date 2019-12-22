@@ -45,4 +45,17 @@
         WHERE
         id = #{id}
     </select>
+
+    <update id="updateProjectById">
+        UPDATE doc_project
+        <set>
+            <if test="projectName != null and projectName != ''">
+                project_name = #{projectName},
+            </if>
+            <if test="description!= null and description != ''">
+                description = #{description},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
 </mapper>

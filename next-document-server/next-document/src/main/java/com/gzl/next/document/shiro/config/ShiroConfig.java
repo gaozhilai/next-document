@@ -40,7 +40,9 @@ public class ShiroConfig {
         // <!-- authc:所有url都必须认证通过才可以访问; anon:所有url都都可以匿名访问-->
         // 访问 /unauthorized/** 不通过JWTFilter
         // 注意此处url不包含ContextName
-        filterChainDefinitionMap.put("/user/login", "anon");
+        filterChainDefinitionMap.put("/user/sign_in", "anon");
+        filterChainDefinitionMap.put("/user/sign_up", "anon");
+        filterChainDefinitionMap.put("/user/", "anon");
         filterChainDefinitionMap.put("/unauthorized/**", "anon");
         // 所有请求通过我们自己的JWT Filter
         filterChainDefinitionMap.put("/**", "jwt");

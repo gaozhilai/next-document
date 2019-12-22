@@ -6,6 +6,7 @@ import com.gzl.next.document.exception.SysException;
 import com.gzl.next.document.mapper.DocProjectMapper;
 import com.gzl.next.document.pojo.entity.DocProject;
 import com.gzl.next.document.pojo.form.ProjectForm;
+import com.gzl.next.document.pojo.form.UpdateProjectForm;
 import com.gzl.next.document.pojo.vo.ProjectDetailVO;
 import com.gzl.next.document.pojo.vo.ProjectVO;
 import com.gzl.next.document.service.ProjectService;
@@ -54,5 +55,12 @@ public class ProjectServiceImpl implements ProjectService {
         ProjectDetailVO projectDetailVO = new ProjectDetailVO();
         BeanUtils.copyProperties(project, projectDetailVO);
         return projectDetailVO;
+    }
+
+    @Override
+    public int updateProjectById(UpdateProjectForm projectForm, Long updatedBy) {
+        int res = projectMapper.updateProjectById(projectForm.getId(),
+                projectForm.getProjectName(), projectForm.getDescription(), updatedBy);
+        return res;
     }
 }

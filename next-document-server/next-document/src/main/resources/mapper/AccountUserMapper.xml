@@ -25,4 +25,13 @@
           account_user
         WHERE login_name = #{loginName}
     </select>
+
+    <insert id="addUser">
+        INSERT INTO account_user (
+          created_on, updated_on, login_name, nickname, password, salt, valid, avatar, phone, email
+        )
+        VALUE (
+          NOW(), NOW(), #{loginName}, #{nickname}, #{password}, #{salt}, #{valid}, #{avatar}, #{phone}, #{email}
+        )
+    </insert>
 </mapper>
