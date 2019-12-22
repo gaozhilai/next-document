@@ -18,6 +18,10 @@
               v-model="form.description">
             </el-input>
           </el-form-item>
+          <el-form-item label="公开项目" :label-width="formLabelWidth">
+            <el-radio v-model="form.privateProject" label="1">公开</el-radio>
+            <el-radio v-model="form.privateProject" label="2">私有</el-radio>
+          </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -26,18 +30,19 @@
       </el-dialog>
       <el-input
         placeholder="请输入要搜索的关键字"
-        v-model="keyWord">
+        v-model="keyWord" @change="search">
         <el-select v-model="select" slot="prepend" placeholder="请选择">
-          <el-option label="餐厅名" value="1"></el-option>
-          <el-option label="订单号" value="2"></el-option>
-          <el-option label="用户电话" value="3"></el-option>
+          <el-option label="项目id" value="1"></el-option>
+          <el-option label="项目名" value="2"></el-option>
+          <el-option label="项目描述" value="3"></el-option>
         </el-select>
-        <el-button slot="append" icon="el-icon-search">搜索</el-button>
+        <el-button slot="append" icon="el-icon-search" @click="search">搜索</el-button>
         <el-button slot="append" icon="el-icon-search" @click="dialogFormVisible = true">新建</el-button>
       </el-input>
       <div
         class="infinite-list"
         v-infinite-scroll="loadProjectList"
+        :infinite-scroll-disabled="stopLoading"
       >
         <el-card
           class="box-card"
@@ -53,6 +58,7 @@
           </div>
         </el-card>
       </div>
+      <p v-if="stopLoading">没有更多了</p>
     </div>
 </template>
 
@@ -60,36 +66,68 @@
     export default {
       data() {
         return {
-          projectList: [
-            {
-              id:"1",
-              projectName: "个人项目",
-              description: "这是一个个人练手项目对应的文档"
-            },
-            {
-              id: "2",
-              projectName: "技术总结",
-              description: "部门技术总结"
-            }
-          ],
+          projectList: [],
           keyWord: "",
           searchType: "",
-          select: "",
+          select: "2",
           dialogFormVisible: false,
           formLabelWidth: '120px',
           form: {
             projectName: '',
-            description: ""
+            description: "",
+            privateProject: "1"
           },
           modal: true,
+          stopLoading: false,
+          page: 1,
+          size: 10,
         };
       },
       methods: {
         loadProjectList: function () {
-          let temp = this.projectList[this.projectList.length - 1];
-          temp.id = Number(temp.id) + 1;
-          this.projectList.push(temp);
+          let param = {
+            page: this.page,
+            size: this.size
+          };
+          if (this.select == 1) {
+            // 项目id
+            param.id = this.keyWord;
+          }
+          if (this.select == 2) {
+            // 项目名
+            param.project_name = this.keyWord;
+          }
+          if (this.select == 3) {
+            // 项目描述
+            param.description = this.keyWord;
+          }
+          this.$axios.get("/projects", {
+            params: param
+          }).then(res => {
+            let data = res.data.data;
+            let pageData = data.page_data;
+            pageData.forEach(e => {
+              let project = {
+                id: e.id,
+                projectName: e.project_name,
+                description: e.description
+              };
+              this.projectList.push(project);
+            });
+            if (data.last_page) {
+              this.stopLoading = true;
+            } else {
+              this.page = this.page + 1;
+            }
+          });
+        },
+        search: function () {
+          this.projectList = [];
+          this.page = 1;
+          this.loadProjectList();
         }
+      },
+      created() {
       }
     }
 </script>
