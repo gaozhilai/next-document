@@ -1,0 +1,35 @@
+spring:
+  profiles:
+    active: dev
+# Jackson 配置
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+    default-property-inclusion: always
+    serialization:
+      write-dates-as-timestamps: true
+# 数据库连接池配置
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 20
+      auto-commit: true
+      idle-timeout: 30000
+      pool-name: HikariForNextDocument
+      max-lifetime: 1800000
+      connection-timeout: 30000
+# 端口项目名配置
+server:
+  port: 9100
+  servlet:
+    context-path: /next_document
+# Mybatis mapper.xml位置配置
+mybatis:
+  mapper-locations: classpath*:/mapper/*.xml
+  type-aliases-package: com.gzl.next.document.pojo.entity
+# PageHelper配置
+pagehelper:
+  helper-dialect: mysql
+  reasonable: true
+  support-methods-arguments: true
+  params: count=countSql
