@@ -15,6 +15,7 @@
           </el-form-item>
           <el-form-item label="性别" :label-width="formLabelWidth">
             <el-radio-group v-model="form.sex">
+              <el-radio :label="0">保密</el-radio>
               <el-radio :label="1">男</el-radio>
               <el-radio :label="2">女</el-radio>
             </el-radio-group>
@@ -150,7 +151,7 @@
             password: "",
             phone: "",
             email: "",
-            sex: 1,
+            sex: 0,
           },
           modal: true,
           fit: true,
