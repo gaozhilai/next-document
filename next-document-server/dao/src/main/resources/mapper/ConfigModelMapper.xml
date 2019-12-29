@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gzl.next.document.mapper.ConfigModelMapper">
+    <resultMap id="BaseResultMap" type="com.gzl.next.document.pojo.entity.ConfigModel">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="created_on" property="createdOn" jdbcType="TIMESTAMP"/>
+        <result column="updated_on" property="updatedOn" jdbcType="TIMESTAMP"/>
+        <result column="model_name" property="modelName" jdbcType="VARCHAR"/>
+        <result column="model_code" property="modelCode" jdbcType="VARCHAR"/>
+        <result column="description" property="description" jdbcType="VARCHAR"/>
+        <result column="state" property="state" jdbcType="BIT"/>
+        <result column="active" property="active" jdbcType="BIT"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, created_on, updated_on, model_name, model_code, description, state, active
+    </sql>
+
+    <insert id="insertBatchConfigModel">
+        INSERT INTO config_model (created_on, updated_on, model_name, model_code, description, state, active)
+        VALUES
+        <foreach collection="configModels" open="(" close=")" separator="," item="ele">
+            NOW(), NOW(), #{ele.modelName}, #{ele.modelCode}, #{ele.description}, #{ele.state}, #{ele.active}
+        </foreach>
+    </insert>
+</mapper>
