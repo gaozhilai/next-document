@@ -11,9 +11,13 @@ import lombok.Data;
 @Data
 public class AccountRole extends BaseEntity {
     /**
-     * 角色代码
+     * 角色名称
      */
     private String roleName;
+    /**
+     * 角色代码
+     */
+    private String roleCode;
     /**
      * 角色描述
      */

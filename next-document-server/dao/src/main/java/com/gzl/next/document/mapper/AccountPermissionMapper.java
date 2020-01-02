@@ -21,4 +21,18 @@ public interface AccountPermissionMapper {
      */
     List<AccountPermission> getAvailablePermission(@Param("roleIds") List<Long> roleIds,
                                                    @Param("userId") Long userId);
+
+    /**
+     * 批量插入权限
+     * @param permissions 权限信息
+     * @return 插入数据条数
+     */
+    int insertBatchPermission(@Param("permissions") List<AccountPermission> permissions);
+
+    /**
+     * 根据permissionCode获取权限信息
+     * @param permissionCode 权限代码
+     * @return 权限
+     */
+    AccountPermission getPermissionByPermissionCode(@Param("permissionCode") String permissionCode);
 }

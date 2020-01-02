@@ -8,8 +8,18 @@
         <result column="user_id" property="userId" jdbcType="BIGINT"/>
         <result column="role_id" property="roleId" jdbcType="BIGINT"/>
     </resultMap>
+
     <sql id="Base_Column_List">
     id, created_on, updated_on, user_id, role_id
-  </sql>
+    </sql>
+
+    <insert id="insertBatchUserRole">
+        INSERT INTO account_user_role
+        (created_on, updated_on, user_id, role_id)
+        VALUES
+        <foreach collection="userRoles" item="userRole" separator=",">
+            (NOW(), NOW(), #{userRole.userId}, #{userRole.roleId})
+        </foreach>
+    </insert>
 
 </mapper>

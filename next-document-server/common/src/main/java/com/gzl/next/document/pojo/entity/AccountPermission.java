@@ -11,9 +11,13 @@ import lombok.Data;
 @Data
 public class AccountPermission extends BaseEntity {
     /**
-     * 权限代码值
+     * 权限名称
      */
     private String permissionName;
+    /**
+     * 权限代码值
+     */
+    private String permissionCode;
     /**
      * 权限描述
      */

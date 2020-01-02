@@ -18,8 +18,8 @@
     <insert id="insertBatchConfigModel">
         INSERT INTO config_model (created_on, updated_on, model_name, model_code, description, state, active)
         VALUES
-        <foreach collection="configModels" open="(" close=")" separator="," item="ele">
-            NOW(), NOW(), #{ele.modelName}, #{ele.modelCode}, #{ele.description}, #{ele.state}, #{ele.active}
+        <foreach collection="configModels" separator="," item="ele" index="index">
+            (NOW(), NOW(), #{ele.modelName}, #{ele.modelCode}, #{ele.description}, #{ele.state}, #{ele.active})
         </foreach>
     </insert>
 </mapper>

@@ -15,4 +15,29 @@ public interface DatabaseDetectInitService {
      * 初始化以必要数据
      */
     void initConfigModelData();
+
+    /**
+     * 初始化账户
+     */
+    void initAccountUserData();
+
+    /**
+     * 初始化账户角色信息
+     */
+    void initAccountRoleData();
+
+    /**
+     * 初始化权限信息
+     */
+    void initAccountPermissionData();
+
+    /**
+     * 初始化角色权限信息
+     */
+    void initAccountRolePermissionData();
+
+    /**
+     * 初始化用户角色关系
+     */
+    void initUserRoleData();
 }

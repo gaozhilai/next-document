@@ -8,8 +8,17 @@
         <result column="role_id" property="roleId" jdbcType="BIGINT"/>
         <result column="permission_id" property="permissionId" jdbcType="BIGINT"/>
     </resultMap>
+
     <sql id="Base_Column_List">
     id, created_on, updated_on, role_id, permission_id
-  </sql>
+    </sql>
 
+    <insert id="insertBatchRolePermission">
+        INSERT INTO account_role_permission
+        (created_on, updated_on, role_id, permission_id)
+        VALUES
+        <foreach collection="rolePermissions" item="rolePermission" separator=",">
+            (NOW(), NOW(), #{rolePermission.roleId}, #{rolePermission.permissionId})
+        </foreach>
+    </insert>
 </mapper>

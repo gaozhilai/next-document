@@ -1,7 +1,6 @@
 package com.gzl.next.document.pojo.entity;
 
 import com.gzl.next.document.pojo.entity.base.BaseEntity;
-import lombok.Builder;
 import lombok.Data;
 
 /**
@@ -10,7 +9,6 @@ import lombok.Data;
  * No Description
  */
 @Data
-@Builder
 public class ConfigModel extends BaseEntity {
     /**
      * 模块名称

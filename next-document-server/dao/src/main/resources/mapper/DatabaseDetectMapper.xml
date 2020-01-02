@@ -29,7 +29,8 @@
           `id` bigint(20) NOT NULL AUTO_INCREMENT,
           `created_on` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP,
           `updated_on` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-          `permission_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '权限代码, 只能英文, 如 user:list:show',
+          `permission_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '权限名称',
+          `permission_code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '权限代码, 只能英文, 如 user:list:show',
           `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '权限描述',
           PRIMARY KEY (`id`) USING BTREE,
           UNIQUE INDEX `permission_name_index`(`permission_name`) USING BTREE COMMENT '限制权限代码唯一'
@@ -52,10 +53,12 @@
           `id` bigint(20) NOT NULL AUTO_INCREMENT,
           `created_on` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP,
           `updated_on` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-          `role_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '角色代码, 只能英文, 如 admin',
+          `role_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '角色名字',
+          `role_code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '角色代码, 只能英文, 如 admin',
           `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '角色描述',
           PRIMARY KEY (`id`) USING BTREE,
-          UNIQUE INDEX `role_name_index`(`role_name`) USING BTREE COMMENT '限制角色代码唯一'
+          UNIQUE INDEX `account_role_role_name_index`(`role_name`) USING BTREE COMMENT '限制角色名称唯一',
+          UNIQUE INDEX `account_role_role_code_index`(`role_name`) USING BTREE COMMENT '限制角色代码唯一'
         ) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic
     </update>
 
@@ -113,16 +116,18 @@
 
     <update id="createConfigModel">
         CREATE TABLE `config_model`  (
-          `id` bigint(20) NOT NULL,
+          `id` bigint(20) NOT NULL AUTO_INCREMENT,
           `created_on` datetime(0) NOT NULL COMMENT '创建时间',
           `updated_on` datetime(0) NOT NULL COMMENT '更新时间',
-          `model_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '模块名称, 英文',
+          `model_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '模块名称',
+          `model_code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '模块代码',
           `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '模块描述',
           `state` tinyint(1) NOT NULL DEFAULT 0 COMMENT '0未启动, 1启动',
           `active` tinyint(1) NOT NULL COMMENT '管理员配置是否显示响应模块, 0关闭, 1激活',
           PRIMARY KEY (`id`) USING BTREE,
-          UNIQUE INDEX `config_model_model_name_index`(`model_name`) USING BTREE
-        ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic
+          UNIQUE INDEX `config_model_model_name_index`(`model_name`) USING BTREE,
+          UNIQUE INDEX `config_model_model_code_index`(`model_code`) USING BTREE
+        ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic
     </update>
 
     <update id="createDocCategory">

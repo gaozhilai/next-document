@@ -6,29 +6,48 @@
         <result column="created_on" property="createdOn" jdbcType="TIMESTAMP"/>
         <result column="updated_on" property="updatedOn" jdbcType="TIMESTAMP"/>
         <result column="permission_name" property="permissionName" jdbcType="VARCHAR"/>
+        <result column="permission_code" property="permissionCode" jdbcType="VARCHAR"/>
         <result column="description" property="description" jdbcType="VARCHAR"/>
     </resultMap>
     <sql id="Base_Column_List">
-    id, created_on, updated_on, permission_name, description
+    id, created_on, updated_on, permission_name, permission_code, description
     </sql>
 
     <select id="getAvailablePermission" resultMap="BaseResultMap">
         SELECT
-	*
-FROM
-	account_permission
-WHERE
-	id IN (
-SELECT
-	permission_id
-FROM
-	( ( SELECT permission_id FROM account_role_permission WHERE role_id IN
-	 <foreach collection="roleIds" item="roleId" separator="," open="(" close=")">
-         #{roleId}
-     </foreach>
-	 ) UNION ( SELECT permission_id FROM account_user_permission WHERE user_id = #{userId} ) ) permissions_table
-WHERE
-	permission_id NOT IN ( SELECT permission_id FROM account_permission_forbidden WHERE user_id = #{userId} )
-	)
+            *
+        FROM
+            account_permission
+        WHERE
+            id IN (
+        SELECT
+            permission_id
+        FROM
+            ( ( SELECT permission_id FROM account_role_permission WHERE role_id IN
+             <foreach collection="roleIds" item="roleId" separator="," open="(" close=")">
+                 #{roleId}
+             </foreach>
+             ) UNION ( SELECT permission_id FROM account_user_permission WHERE user_id = #{userId} ) ) permissions_table
+        WHERE
+            permission_id NOT IN ( SELECT permission_id FROM account_permission_forbidden WHERE user_id = #{userId} )
+            )
+    </select>
+
+    <insert id="insertBatchPermission">
+        INSERT INTO account_permission
+        (created_on, updated_on, permission_name, permission_code, description)
+        VALUES
+        <foreach collection="permissions" item="permission" separator=",">
+            (NOW(), NOW(), #{permission.permissionName}, #{permission.permissionCode}, #{permission.description})
+        </foreach>
+    </insert>
+
+    <select id="getPermissionByPermissionCode" resultMap="BaseResultMap">
+        SELECT
+          <include refid="Base_Column_List"/>
+        FROM
+          account_permission
+        WHERE
+          permission_code = #{permissionCode}
     </select>
 </mapper>

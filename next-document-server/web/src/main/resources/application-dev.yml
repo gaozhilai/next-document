@@ -3,11 +3,14 @@ host:
   server-host: 172.16.176.65
 spring:
   datasource:
-    username: root
-    password: 123456
-    url: jdbc:mysql://localhost:3306/next_document?serverTimezone=GMT%2B8
+# 自定义数据源, 在尝试创建数据库后再初始化
+    my-datasource:
+      jdbc-url: jdbc:mysql://localhost:3306/next_document?serverTimezone=GMT%2B8
+      username: root
+      password: 123456
+# jdbc-url不指定数据库, 用于有限初始化尝试创建数据库
     database-initializer:
-      jdbc-url: jdbc:mysql://localhost:3306?serverTimezone=UTC
+      jdbc-url: jdbc:mysql://localhost:3306?serverTimezone=GMT%2B8
       username: root
       password: 123456
 

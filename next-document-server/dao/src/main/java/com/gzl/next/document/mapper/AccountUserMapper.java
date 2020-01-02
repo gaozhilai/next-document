@@ -4,6 +4,8 @@ import com.gzl.next.document.pojo.entity.AccountUser;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * @author GaoZhilai
  * @date 19/11/17
@@ -34,4 +36,11 @@ public interface AccountUserMapper {
                 @Param("password") String password, @Param("salt") String salt, @Param("valid") Integer valid,
                 @Param("avatar") String avatar, @Param("phone") String phone, @Param("email") String email,
                 @Param("gender") Short gender);
+
+    /**
+     * 批量插入用户
+     * @param users 用户列表
+     * @return 成功插入数据条数
+     */
+    int insertBatchUser(@Param("users") List<AccountUser> users);
 }

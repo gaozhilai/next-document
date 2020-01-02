@@ -6,11 +6,14 @@
         <result column="created_on" property="createdOn" jdbcType="TIMESTAMP"/>
         <result column="updated_on" property="updatedOn" jdbcType="TIMESTAMP"/>
         <result column="role_name" property="roleName" jdbcType="VARCHAR"/>
+        <result column="role_code" property="roleCode" jdbcType="VARCHAR"/>
         <result column="description" property="description" jdbcType="VARCHAR"/>
     </resultMap>
+
     <sql id="Base_Column_List">
-    id, created_on, updated_on, role_name, description
+    id, created_on, updated_on, role_name, role_code, description
     </sql>
+
     <select id="getRoleByUserId" resultMap="BaseResultMap">
         SELECT
         <include refid="Base_Column_List"/>
@@ -19,5 +22,23 @@
         (
           SELECT role_id FROM account_user_role WHERE user_id = #{userId}
         )
+    </select>
+
+    <insert id="insertBatchRole">
+        INSERT INTO account_role
+        (created_on, updated_on, role_name, role_code, description)
+        VALUES
+        <foreach collection="roles" item="role" separator=",">
+            (NOW(), NOW(), #{role.roleName}, #{role.roleCode}, #{role.description})
+        </foreach>
+    </insert>
+
+    <select id="getRoleByRoleCode" resultMap="BaseResultMap">
+        SELECT
+          <include refid="Base_Column_List"/>
+        FROM
+          account_role
+        WHERE
+          role_code = #{roleCode}
     </select>
 </mapper>

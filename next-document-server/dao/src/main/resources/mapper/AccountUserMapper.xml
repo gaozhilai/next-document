@@ -35,4 +35,17 @@
           NOW(), NOW(), #{loginName}, #{nickname}, #{password}, #{salt}, #{valid}, #{avatar}, #{phone}, #{email}, #{gender}
         )
     </insert>
+
+    <insert id="insertBatchUser">
+        INSERT INTO account_user (
+          created_on, updated_on, login_name, nickname, password, salt, valid, avatar, phone, email, gender
+        )
+        VALUES
+        <foreach collection="users" item="user" separator=",">
+            (
+              NOW(), NOW(), #{user.loginName}, #{user.nickname}, #{user.password}, #{user.salt}, #{user.valid},
+            #{user.avatar}, #{user.phone}, #{user.email}, #{user.gender}
+            )
+        </foreach>
+    </insert>
 </mapper>

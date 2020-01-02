@@ -1,15 +1,14 @@
 package com.gzl.next.document.service.impl;
 
-import com.gzl.next.document.mapper.ConfigModelMapper;
-import com.gzl.next.document.mapper.DatabaseDetectInitMapper;
-import com.gzl.next.document.pojo.entity.ConfigModel;
+import com.gzl.next.document.mapper.*;
+import com.gzl.next.document.pojo.entity.*;
 import com.gzl.next.document.service.DatabaseDetectInitService;
+import com.gzl.next.document.util.EncryptionUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import javax.sql.DataSource;
 import java.util.Arrays;
 import java.util.List;
 
@@ -22,86 +21,27 @@ import java.util.List;
 @Service
 public class DatabaseDetectInitServiceImpl implements DatabaseDetectInitService {
     @Autowired
-    private DataSource initializerDataSource;
-    @Autowired
     private DatabaseDetectInitMapper databaseDetectInitMapper;
     @Autowired
     private ConfigModelMapper configModelMapper;
+    @Autowired
+    private AccountUserMapper accountUserMapper;
+    @Autowired
+    private AccountRoleMapper accountRoleMapper;
+    @Autowired
+    private AccountPermissionMapper accountPermissionMapper;
+    @Autowired
+    private AccountRolePermissionMapper accountRolePermissionMapper;
+    @Autowired
+    private AccountUserRoleMapper accountUserRoleMapper;
 
     @Override
     public void detectInitDatabase() {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(initializerDataSource);
-        Integer databaseExists = jdbcTemplate.query(
-                "SELECT COUNT(*) FROM information_schema.SCHEMATA WHERE schema_name = 'next_document'",
-                (rs, rowNum) -> rs.getInt(1)).get(0);
-        if (databaseExists > 0) {
-            databaseDetectInitMapper.selectDatabase("next_document");
-            // 数据库已经存在, 分别检测表是否存在
-            int accountPermission = databaseDetectInitMapper.weatherTableExists("next_document",
-                    "account_permission");
-            if (accountPermission == 0) {
-                databaseDetectInitMapper.createAccountPermission();
-            }
-            int accountPermissionForbidden = databaseDetectInitMapper.weatherTableExists("next_document",
-                    "account_permission_forbidden");
-            if (accountPermissionForbidden == 0) {
-                databaseDetectInitMapper.createdAccountPermissionForbidden();
-            }
-            int accountRole = databaseDetectInitMapper.weatherTableExists("next_document",
-                    "account_role");
-            if (accountRole == 0) {
-                databaseDetectInitMapper.createAccountRole();
-            }
-            int accountRolePermission = databaseDetectInitMapper.weatherTableExists("next_document",
-                    "account_role_permission");
-            if (accountRolePermission == 0) {
-                databaseDetectInitMapper.createAccountRolePermission();
-            }
-            int accountUser = databaseDetectInitMapper.weatherTableExists("next_document",
-                    "account_user");
-            if (accountUser == 0) {
-                databaseDetectInitMapper.createAccountUser();
-            }
-            int accountUserPermission = databaseDetectInitMapper.weatherTableExists("next_document",
-                    "account_user_permission");
-            if (accountUserPermission == 0) {
-                databaseDetectInitMapper.createAccountUserPermission();
-            }
-            int accountUserRole = databaseDetectInitMapper.weatherTableExists("next_document",
-                    "account_user_role");
-            if (accountUserRole == 0) {
-                databaseDetectInitMapper.createAccountUserRole();
-            }
-            int configModel = databaseDetectInitMapper.weatherTableExists("next_document",
-                    "config_model");
-            if (configModel == 0) {
-                databaseDetectInitMapper.createConfigModel();
-                this.initConfigModelData();
-            }
-            int docCategory = databaseDetectInitMapper.weatherTableExists("next_document",
-                    "doc_category");
-            if (docCategory == 0) {
-                databaseDetectInitMapper.createDocCategory();
-            }
-            int docDocument = databaseDetectInitMapper.weatherTableExists("next_document",
-                    "doc_document");
-            if (docDocument == 0) {
-                databaseDetectInitMapper.createDocDocument();
-            }
-            int docHistory = databaseDetectInitMapper.weatherTableExists("next_document",
-                    "doc_history");
-            if (docHistory == 0) {
-                databaseDetectInitMapper.createDocHistory();
-            }
-            int docProject = databaseDetectInitMapper.weatherTableExists("next_document",
-                    "doc_project");
-            if (docProject == 0) {
-                databaseDetectInitMapper.createDocProject();
-            }
-        } else {
+        int databaseExists = databaseDetectInitMapper.weatherTableExists("next_document",
+                "account_user");
+        // account_user表不存在视为数据库需要初始化表结构
+        if (databaseExists == 0) {
             // 数据库不存在创建数据库, 创建表
-            jdbcTemplate.execute("CREATE DATABASE IF NOT EXISTS next_document CHARACTER SET UTF8MB4");
-            databaseDetectInitMapper.selectDatabase("next_document");
             databaseDetectInitMapper.createAccountPermission();
             databaseDetectInitMapper.createdAccountPermissionForbidden();
             databaseDetectInitMapper.createAccountRole();
@@ -114,19 +54,89 @@ public class DatabaseDetectInitServiceImpl implements DatabaseDetectInitService 
             databaseDetectInitMapper.createDocDocument();
             databaseDetectInitMapper.createDocHistory();
             databaseDetectInitMapper.createDocProject();
+            this.initConfigModelData();
+            this.initAccountRoleData();
+            this.initAccountPermissionData();
+            this.initAccountRolePermissionData();
+            this.initAccountUserData();
+            this.initUserRoleData();
+            log.info("初始化数据库表结构以及必要数据完毕");
         }
-        log.info("初始化数据库表结构以及必要数据完毕");
     }
 
     @Override
     public void initConfigModelData() {
-        ConfigModel drawingBoard = ConfigModel.builder().modelName("画板").modelCode("drawing_board")
-                .description("同步画板模块").state(true).active(true).build();
-        ConfigModel vote = ConfigModel.builder().modelName("投票").modelCode("vote")
-                .description("投票模块").state(true).active(true).build();
-        ConfigModel instantMessaging = ConfigModel.builder().modelName("即时通讯").modelCode("instant_messaging")
-                .description("及时通讯模块").state(true).active(true).build();
+        ConfigModel drawingBoard = new ConfigModel();
+        drawingBoard.setModelName("画板");
+        drawingBoard.setModelCode("drawing_board");
+        drawingBoard.setDescription("同步画板模块");
+        drawingBoard.setState(true);
+        drawingBoard.setActive(true);
+        ConfigModel vote = new ConfigModel();
+        vote.setModelName("投票");
+        vote.setModelCode("vote");
+        vote.setDescription("投票模块");
+        vote.setState(true);
+        vote.setActive(true);
+        ConfigModel instantMessaging = new ConfigModel();
+        instantMessaging.setModelName("即时通讯");
+        instantMessaging.setModelCode("instant_messaging");
+        instantMessaging.setDescription("即时通讯模块");
+        instantMessaging.setState(true);
+        instantMessaging.setActive(true);
         List<ConfigModel> configModels = Arrays.asList(new ConfigModel[]{drawingBoard, vote, instantMessaging});
         configModelMapper.insertBatchConfigModel(configModels);
+    }
+
+    @Override
+    public void initAccountUserData() {
+        String password = "123456";
+        String salt = RandomStringUtils.randomAlphanumeric(64);
+        String realPassword = EncryptionUtil.getRealPwd(password, salt);
+        AccountUser accountUser = new AccountUser();
+        accountUser.setLoginName("admin");
+        accountUser.setNickname("管理员");
+        accountUser.setPassword(realPassword);
+        accountUser.setSalt(salt);
+        accountUser.setValid(true);
+        accountUserMapper.insertBatchUser(Arrays.asList(accountUser));
+    }
+
+    @Override
+    public void initAccountRoleData() {
+        AccountRole role = new AccountRole();
+        role.setRoleName("管理员");
+        role.setRoleCode("admin");
+        role.setDescription("管理员角色");
+        accountRoleMapper.insertBatchRole(Arrays.asList(role));
+    }
+
+    @Override
+    public void initAccountPermissionData() {
+        AccountPermission managerPermission = new AccountPermission();
+        managerPermission.setPermissionName("管理员权限");
+        managerPermission.setPermissionCode("manager");
+        managerPermission.setDescription("管理员权限");
+        accountPermissionMapper.insertBatchPermission(Arrays.asList(managerPermission));
+    }
+
+    @Override
+    public void initAccountRolePermissionData() {
+        AccountRole admin = accountRoleMapper.getRoleByRoleCode("admin");
+        AccountPermission manager = accountPermissionMapper.getPermissionByPermissionCode("manager");
+        AccountRolePermission rolePermission = new AccountRolePermission();
+        rolePermission.setRoleId(admin.getId());
+        rolePermission.setPermissionId(manager.getId());
+        accountRolePermissionMapper.insertBatchRolePermission(Arrays.asList(rolePermission));
+    }
+
+    @Override
+    public void initUserRoleData() {
+        AccountUser adminUser = accountUserMapper.getAccountUserByLoginName("admin");
+        AccountRole adminRole = accountRoleMapper.getRoleByRoleCode("admin");
+        AccountUserRole userRole = new AccountUserRole();
+        userRole.setUserId(adminUser.getId());
+        userRole.setRoleId(adminRole.getId());
+        accountUserRoleMapper.insertBatchUserRole(Arrays.asList(userRole));
     }
 }

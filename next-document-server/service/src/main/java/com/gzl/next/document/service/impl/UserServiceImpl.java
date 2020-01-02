@@ -16,6 +16,7 @@ import com.gzl.next.document.util.UserCache;
 import com.gzl.next.document.util.EncryptionUtil;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.util.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -50,15 +51,18 @@ public class UserServiceImpl implements UserService {
         Long userId = user.getId();
         List<AccountRole> accountRoles = accountRoleMapper.getRoleByUserId(userId);
         List<Long> roleIds = new ArrayList<>();
-        accountRoles.stream().forEach(role -> roleIds.add(role.getId()));
+        accountRoles.forEach(role -> roleIds.add(role.getId()));
+        if (CollectionUtils.isEmpty(roleIds)) {
+            return RolePermissionDTO.builder().build();
+        }
         List<AccountPermission> accountPermissions = accountPermissionMapper.getAvailablePermission(roleIds, userId);
         Set<String> roles = accountRoles
                 .stream()
-                .map(AccountRole::getRoleName)
+                .map(AccountRole::getRoleCode)
                 .collect(Collectors.toSet());
         Set<String> permissions = accountPermissions
                 .stream()
-                .map(AccountPermission::getPermissionName)
+                .map(AccountPermission::getPermissionCode)
                 .collect(Collectors.toSet());
         RolePermissionDTO rolePermissionDTO = RolePermissionDTO.builder().roles(roles).permissions(permissions).build();
         return rolePermissionDTO;
