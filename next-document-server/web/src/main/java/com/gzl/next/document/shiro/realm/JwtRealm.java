@@ -58,7 +58,7 @@ public class JwtRealm extends AuthorizingRealm {
         if (user == null) {
             throw new AuthenticationException(new SysException(SysCodeEnum.USER_NAME_OR_PASSWORD_ERROR));
         }
-        JwtUtil.validateToken(token, user.getSalt());
+        JwtUtil.validateToken(token, user.getSalt(), user.getPassword());
         if (!user.getValid()) {
             throw new AuthenticationException(new SysException(SysCodeEnum.ACCOUNT_BLOCKED));
         }

@@ -3,6 +3,7 @@ package com.gzl.next.document.util;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.gzl.next.document.enums.SysCodeEnum;
@@ -30,9 +31,9 @@ public class JwtUtil {
         JwtUtil.expiration = expiration;
     }
 
-    public static String generateToken(String loginName, String secret) {
+    public static String generateToken(String loginName, String salt, String password) {
         Date expirationDate = new DateTime().plusDays(expiration).toDate();
-        Algorithm algorithm = Algorithm.HMAC256(secret);
+        Algorithm algorithm = Algorithm.HMAC256(salt + password);
         String token = JWT.create()
                 .withClaim("login_name", loginName)
                 //到期时间
@@ -42,11 +43,11 @@ public class JwtUtil {
         return token;
     }
 
-    public static String validateToken(String token, String salt) {
+    public static String validateToken(String token, String salt, String password) {
         try {
             DecodedJWT jwt = JWT.decode(token);
             String loginName = jwt.getClaim("login_name").asString();
-            Algorithm algorithm = Algorithm.HMAC256(salt);
+            Algorithm algorithm = Algorithm.HMAC256(salt + password);
             //在token中附带了username信息
             JWTVerifier verifier = JWT.require(algorithm).build();
             verifier.verify(token);
@@ -56,7 +57,7 @@ public class JwtUtil {
                 return null;
             }
         }catch (Exception e){
-            if (e instanceof TokenExpiredException) {
+            if (e instanceof JWTVerificationException) {
                 throw new SysException(SysCodeEnum.TOKEN_EXPIRED);
             }
             return null;
