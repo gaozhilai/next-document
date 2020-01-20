@@ -23,7 +23,7 @@
 
 <script>
     import {successMsg} from "../../util/notify";
-    import {setPermission, setRole, setToken} from "../../util/userInfo";
+    import {clearToken, setPermission, setRole, setToken} from "../../util/userInfo";
 
     export default {
       data() {
@@ -36,7 +36,8 @@
       },
       methods: {
         login: function () {
-          this.$axios.get("/user/login", {
+          clearToken();
+          this.$axios.get("/user/sign_in", {
             params: {
               login_name: this.formData.loginName,
               password: this.formData.password

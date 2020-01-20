@@ -51,7 +51,8 @@
         >
           <div slot="header" class="clearfix">
             <span>{{project.projectName}}</span>
-            <el-button style="float: right; padding: 3px 0" type="text">添加</el-button>
+            <el-button v-if="shortcut_index" style="float: right; padding: 3px 0" type="text" @click="addShortcut(project.id)">添加</el-button>
+            <el-button v-if="!shortcut_index" style="float: right; padding: 3px 0" type="text">文档</el-button>
           </div>
           <div>
             {{project.description}}
@@ -63,6 +64,8 @@
 </template>
 
 <script>
+    import {successMsg} from "../../util/notify";
+
     export default {
       data() {
         return {
@@ -81,6 +84,7 @@
           stopLoading: false,
           page: 1,
           size: 10,
+          shortcut_index: '', // 要添加快捷方式的下标
         };
       },
       methods: {
@@ -125,9 +129,24 @@
           this.projectList = [];
           this.page = 1;
           this.loadProjectList();
+        },
+        getIndexParam() {
+          let index = this.$route.query.index;
+          this.shortcut_index = index;
+        },
+        addShortcut: function (project_id) {
+          let param = {
+            project_id: project_id,
+            shortcut_index: this.shortcut_index
+          };
+          this.$axios.post("/project_shortcut", param).then(res => {
+            successMsg(res.data.msg);
+            this.$router.push("/layout/project_panel");
+          });
         }
       },
       created() {
+        this.getIndexParam();
       }
     }
 </script>

@@ -9,17 +9,38 @@
           :key="index"
           :span="6"
         >
-          <router-link
-            to="/layout/document_panel"
+          <!--存在快捷方式时布局-->
+          <div
+            v-if="item.id"
+            :class="currentActiveIndex == index ? classPurpleLight : classPurple"
           >
+            <div class="shortcut-delete">
+              <el-button class="delete-icon" icon="el-icon-delete" @click="deleteShortcut(item.shortcut_index)"></el-button>
+            </div>
             <div
+              class="shortcut-project"
               @mouseenter="onMouseIn(index)"
               @mouseout="onMouseOut"
-              :class="currentActiveIndex == index ? classPurpleLight : classPurple"
+              @click="gotoDocumentPanel"
             >
-              {{item.projectName}}
+              {{item.project_name}}
             </div>
-          </router-link>
+          </div>
+          <!--不存在快捷方式时布局-->
+          <div
+            v-if="!item.id"
+            :class="currentActiveIndex == index ? classPurpleLight : classPurple"
+          >
+            <div class="non-shortcut"
+                 @mouseenter="onMouseIn(index)"
+                 @mouseout="onMouseOut"
+                 @click="addProject(index)"
+            >
+              <i class="el-icon-plus more"
+                 @mouseenter="onMouseIn(index)"
+              ></i>
+            </div>
+          </div>
         </el-col>
         <el-col
           :span="6"
@@ -30,7 +51,9 @@
             :class="currentActiveIndex == 11 ? classPurpleLight : classPurple"
             @click="gotoProjectList"
           >
-            <i id="more" class="el-icon-more"></i>
+            <div class="non-shortcut">
+              <i class="el-icon-more more"></i>
+            </div>
           </div>
         </el-col>
       </el-col>
@@ -57,6 +80,8 @@
 </template>
 
 <script>
+    import {successMsg} from "../../util/notify";
+
     export default {
         data() {
           return {
@@ -65,52 +90,30 @@
             currentActiveIndex: -1,
             projects: [
               {
-                id: '1',
-                icon: '',
-                projectName: '我的日记'
+                shortcut_index: 1
               },
               {
-                id: '2',
-                icon: '',
-                projectName: '项目一'
+                shortcut_index: 2
               },
               {
-                id: '3',
-                icon: '',
-                projectName: '学习笔记'
+                shortcut_index: 3
               },
               {
-                id: '4',
-                icon: '',
-                projectName: '学习笔记'
+                shortcut_index: 4
               },{
-                id: '5',
-                icon: '',
-                projectName: '学习笔记'
+                shortcut_index: 5
               },{
-                id: '6',
-                icon: '',
-                projectName: '学习笔记'
+                shortcut_index: 6
               },{
-                id: '7',
-                icon: '',
-                projectName: '学习笔记'
+                shortcut_index: 7
               },{
-                id: '8',
-                icon: '',
-                projectName: '学习笔记'
+                shortcut_index: 8
               },{
-                id: '9',
-                icon: '',
-                projectName: '学习笔记'
+                shortcut_index: 9
               },{
-                id: '10',
-                icon: '',
-                projectName: '学习笔记'
+                shortcut_index: 10
               },{
-                id: '11',
-                icon: '',
-                projectName: '学习笔记'
+                shortcut_index: 11
               }
               ],
             backgroundUrl: "background: url('../assets/unsplash.jpg');background-size: cover;",
@@ -136,7 +139,31 @@
         },
         gotoProjectList: function () {
           this.$router.push("/layout/project_list");
+        },
+        gotoDocumentPanel: function () {
+          this.$router.push("/layout/document_panel");
+        },
+        addProject: function(index) {
+          this.$router.push("/layout/project_list?index=" + index);
+        },
+        getProjectShortcut: function () {
+          this.$axios.get("/project_shortcut").then(res => {
+            let data = res.data.data;
+            data.forEach(ele => {
+              let shortcutIndex = ele.shortcut_index;
+              this.projects.splice(shortcutIndex, 1, ele);
+            });
+          });
+        },
+        deleteShortcut: function (shortcutIndex) {
+          this.$axios.delete("/project_shortcut/" + shortcutIndex).then(res => {
+            this.projects.splice(shortcutIndex, 1, {shortcut_index: shortcutIndex});
+            successMsg(res.data.msg);
+          });
         }
+      },
+      created() {
+        this.getProjectShortcut();
       }
     }
 </script>
@@ -144,6 +171,7 @@
 <style scoped>
   .el-col {
     border-radius: 4px;
+    position: relative;
   }
   .bg-purple-dark {
     background: #99a9bf;
@@ -164,9 +192,6 @@
     border-radius: 4px;
     height: 90%;
     margin: 5%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
   }
   .grid-content img {
     vertical-align: middle;
@@ -179,7 +204,26 @@
     align-items:center;
     justify-content:center;
   }
-  #more {
+  .more {
     font-size: 50px;
+  }
+  .shortcut-delete {
+    height: 1%;
+    text-align: right;
+  }
+  .shortcut-project {
+    height: 99%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .delete-icon {
+    background-color: #909399;
+  }
+  .non-shortcut {
+    height: 99%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 </style>

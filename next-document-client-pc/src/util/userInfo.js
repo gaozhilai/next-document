@@ -1,11 +1,21 @@
 import vueCookies from 'vue-cookies';
 
 export function getToken() {
-  return vueCookies.get('token');
+  let token = vueCookies.get('token');
+  if (token) {
+    return token;
+  } else {
+    // 防止返回null或undefined被后台解析成字符串
+    return '';
+  }
 }
 
 export function setToken(token) {
   vueCookies.set('token', token, -1);
+}
+
+export function clearToken() {
+  vueCookies.set('token', '', -1);
 }
 
 export function getUserInfo() {
