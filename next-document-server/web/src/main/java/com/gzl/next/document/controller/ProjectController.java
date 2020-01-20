@@ -1,9 +1,12 @@
 package com.gzl.next.document.controller;
 
 import com.gzl.next.document.pojo.form.ProjectForm;
+import com.gzl.next.document.pojo.form.ShortcutFORM;
 import com.gzl.next.document.pojo.form.UpdateProjectForm;
+import com.gzl.next.document.pojo.vo.AccountUserProjectVO;
 import com.gzl.next.document.pojo.vo.ProjectDetailVO;
 import com.gzl.next.document.pojo.vo.ProjectVO;
+import com.gzl.next.document.service.AccountUserProjectService;
 import com.gzl.next.document.service.ProjectService;
 import com.gzl.next.document.util.*;
 import org.apache.commons.lang3.StringUtils;
@@ -16,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * @author GaoZhilai
@@ -27,6 +31,8 @@ import javax.validation.constraints.NotNull;
 public class ProjectController {
     @Autowired
     private ProjectService projectService;
+    @Autowired
+    private AccountUserProjectService accountUserProjectService;
 
     @GetMapping("/projects")
     public ResponseEntity<CommonResult<PageData<ProjectVO>>> getProjectList(@Min(1) @RequestParam("page") Integer page,
@@ -68,5 +74,30 @@ public class ProjectController {
         } else {
             return ResultUtil.renderSuccess("更新项目信息失败");
         }
+    }
+
+    @GetMapping("/project_shortcut")
+    public ResponseEntity<CommonResult<List<AccountUserProjectVO>>> projectShortcut(HttpServletRequest request) {
+        Long currentUserId = RequestAttributeUtil.getCurrentUserId(request);
+        List<AccountUserProjectVO> userProjectByUserId = accountUserProjectService.getUserProjectByUserId(currentUserId);
+        return ResultUtil.renderSuccess(userProjectByUserId);
+    }
+
+    @PostMapping("/project_shortcut")
+    public ResponseEntity<CommonResult> addProjectShortcut(HttpServletRequest request,
+                                                           @Validated @RequestBody ShortcutFORM shortcutFORM) {
+        Long currentUserId = RequestAttributeUtil.getCurrentUserId(request);
+        accountUserProjectService.addProjectShortcut(currentUserId,
+                shortcutFORM.getProjectId(),
+                shortcutFORM.getShortcutIndex());
+        return ResultUtil.renderSuccess("添加快捷方式成功");
+    }
+
+    @DeleteMapping("/project_shortcut/{shortcut_index}")
+    public ResponseEntity<CommonResult> deleteProjectShortcut(HttpServletRequest request,
+                                                              @NotNull @PathVariable("shortcut_index") Integer shortcutIndex) {
+        Long currentUserId = RequestAttributeUtil.getCurrentUserId(request);
+        accountUserProjectService.deleteProjectShortcut(currentUserId, shortcutIndex);
+        return ResultUtil.renderSuccess("删除快捷方式成功");
     }
 }

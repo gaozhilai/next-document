@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gzl.next.document.mapper.AccountUserProjectMapper">
+    <resultMap id="BaseResultMap" type="com.gzl.next.document.pojo.entity.AccountUserProject">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="created_on" property="createdOn" jdbcType="TIMESTAMP"/>
+        <result column="updated_on" property="updatedOn" jdbcType="TIMESTAMP"/>
+        <result column="user_id" property="userId" jdbcType="BIGINT"/>
+        <result column="project_id" property="projectId" jdbcType="BIGINT"/>
+        <result column="shortcut_index" property="shortcutIndex" jdbcType="INTEGER"/>
+    </resultMap>
+    <resultMap id="ProjectVOResultMap" type="com.gzl.next.document.pojo.vo.AccountUserProjectVO">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="user_id" property="userId" jdbcType="BIGINT"/>
+        <result column="project_id" property="projectId" jdbcType="BIGINT"/>
+        <result column="shortcut_index" property="shortcutIndex" jdbcType="INTEGER"/>
+        <result column="project_name" property="projectName" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, created_on, updated_on, user_id, project_id, shortcut_index
+    </sql>
+
+    <select id="getUserProjectByUserId" resultMap="ProjectVOResultMap">
+        SELECT user_project.id, user_project.user_id, user_project.project_id, user_project.shortcut_index, doc_project.project_name
+        FROM account_user_project user_project LEFT JOIN doc_project ON user_project.project_id = doc_project.id
+        WHERE user_id = #{userId}
+    </select>
+
+    <insert id="addProjectShortcut">
+        INSERT INTO account_user_project
+        (created_on, updated_on, user_id, project_id, shortcut_index)
+        VALUES
+        (NOW(), NOW(), #{userId}, #{projectId}, #{shortcutIndex})
+    </insert>
+
+    <delete id="deleteProjectShortcut">
+        DELETE FROM account_user_project
+        WHERE user_id = #{userId} AND shortcut_index = #{shortcutIndex}
+    </delete>
+</mapper>
