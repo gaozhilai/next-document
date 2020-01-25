@@ -21,7 +21,7 @@
               class="shortcut-project"
               @mouseenter="onMouseIn(index)"
               @mouseout="onMouseOut"
-              @click="gotoDocumentPanel"
+              @click="gotoDocumentPanel(index)"
             >
               {{item.project_name}}
             </div>
@@ -140,8 +140,9 @@
         gotoProjectList: function () {
           this.$router.push("/layout/project_list");
         },
-        gotoDocumentPanel: function () {
-          this.$router.push("/layout/document_panel");
+        gotoDocumentPanel: function (index) {
+          let id = this.projects[index].project_id;
+          this.$router.push("/layout/document_panel?project_id=" + id);
         },
         addProject: function(index) {
           this.$router.push("/layout/project_list?index=" + index);

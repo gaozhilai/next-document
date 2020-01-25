@@ -4,7 +4,13 @@
         <el-aside
           id="layout-aside"
         >
-          <el-tree :data="data" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
+          <el-tree
+            :props="props"
+            :load="loadNode"
+            lazy
+            @node-click="handleNodeClick"
+            >
+          </el-tree>
         </el-aside>
         <el-container direction="vertical">
           <el-header>
@@ -65,53 +71,52 @@
       return {
         content: "",
         preview: true,
-        data: [{
-          label: '一级 1',
-          children: [{
-            label: '二级 1-1',
-            children: [{
-              label: '三级 1-1-1'
-            }]
-          }]
-        }, {
-          label: '一级 2',
-          children: [{
-            label: '二级 2-1',
-            children: [{
-              label: '三级 2-1-1'
-            }]
-          }, {
-            label: '二级 2-2',
-            children: [{
-              label: '三级 2-2-1'
-            }]
-          }]
-        }, {
-          label: '一级 3',
-          children: [{
-            label: '二级 3-1',
-            children: [{
-              label: '三级 3-1-1'
-            }]
-          }, {
-            label: '二级 3-2',
-            children: [{
-              label: '三级 3-2-1'
-            }]
-          }]
-        }],
-        defaultProps: {
-          children: 'children',
-          label: 'label'
-        }
+        props: {
+          label: 'name',
+          isLeaf: 'leaf',
+          id: 'id',
+        },
+        projectId: ''
       }
     },
     mounted() {
       
     },
     methods: {
-      handleNodeClick(data) {
-        console.log(data);
+      loadNode(node, resolve) {
+        console.log("节点内容", node);
+        let url = '/document/categories/' + this.projectId;
+        if (node.level === 0) {
+          url = url + '/0';
+        } else {
+          url = url + '/' + node.data.id;
+        }
+        console.log("url为", url);
+        this.$axios.get(url).then(res => {
+          console.log("获取数据为", JSON.stringify(res.data));
+          let data = res.data;
+          let categories = data.data.categories;
+          let documents = data.data.documents;
+          let list = [];
+          if (categories) {
+            categories.forEach(ele => {
+              list.push({
+                id: ele.id,
+                name: ele.category_name
+              });
+            })
+          }
+          if (documents) {
+            documents.forEach(ele => {
+              list.push({
+                id: ele.id,
+                name: ele.doc_name,
+                leaf: true
+              });
+            });
+          }
+          return resolve(list);
+        });
       },
       togglePreview: function () {
         this.preview = !this.preview;
@@ -122,7 +127,14 @@
       saveAndPreview: function () {
         this.save();
         this.togglePreview();
+      },
+      handleNodeClick: function (data) {
+        console.log("点击内容", data)
       }
+    },
+    created() {
+      let projectId = this.$route.query.project_id;
+      this.projectId = projectId;
     }
   };
 </script>
