@@ -8,7 +8,7 @@ import com.gzl.next.document.pojo.dto.RolePermissionDTO;
 import com.gzl.next.document.pojo.entity.AccountPermission;
 import com.gzl.next.document.pojo.entity.AccountRole;
 import com.gzl.next.document.pojo.entity.AccountUser;
-import com.gzl.next.document.pojo.form.UserForm;
+import com.gzl.next.document.pojo.form.UserFORM;
 import com.gzl.next.document.pojo.vo.LoginVO;
 import com.gzl.next.document.service.UserService;
 import com.gzl.next.document.util.JwtUtil;
@@ -91,16 +91,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public int signUp(UserForm userForm) {
-        AccountUser accountUserByLoginName = accountUserMapper.getAccountUserByLoginName(userForm.getLoginName());
+    public int signUp(UserFORM userFORM) {
+        AccountUser accountUserByLoginName = accountUserMapper.getAccountUserByLoginName(userFORM.getLoginName());
         if (accountUserByLoginName != null) {
             throw new SysException(SysCodeEnum.LOGIN_NAME_ALREADY_EXIST);
         }
         String salt = RandomStringUtils.randomAlphanumeric(64);
-        String realPwd = EncryptionUtil.getRealPwd(userForm.getPassword(), salt);
-        int res = accountUserMapper.addUser(userForm.getLoginName(), userForm.getNickname(), realPwd,
-                salt, CommonStatusEnum.VALID.getCode(), userForm.getAvatar(), userForm.getPhone(), userForm.getEmail(),
-                userForm.getGender());
+        String realPwd = EncryptionUtil.getRealPwd(userFORM.getPassword(), salt);
+        int res = accountUserMapper.addUser(userFORM.getLoginName(), userFORM.getNickname(), realPwd,
+                salt, CommonStatusEnum.VALID.getCode(), userFORM.getAvatar(), userFORM.getPhone(), userFORM.getEmail(),
+                userFORM.getGender());
         return res;
     }
 }

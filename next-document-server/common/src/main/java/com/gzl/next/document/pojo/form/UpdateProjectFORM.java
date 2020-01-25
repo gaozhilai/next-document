@@ -7,15 +7,13 @@ import javax.validation.constraints.NotNull;
 
 /**
  * @author GaoZhilai
- * @date 19/12/7 20:17
- * No Description
+ * @date 19/12/22 11:25
+ * 更新项目信息
  */
 @Data
-public class ProjectForm {
-    @NotBlank
-    private String projectName;
-    @NotBlank
-    private String description;
+public class UpdateProjectFORM {
     @NotNull
-    private Boolean privateProject;
+    private Long id;
+    private String projectName;
+    private String description;
 }

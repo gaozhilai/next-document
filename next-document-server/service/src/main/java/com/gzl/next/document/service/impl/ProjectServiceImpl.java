@@ -3,8 +3,8 @@ package com.gzl.next.document.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.gzl.next.document.mapper.DocProjectMapper;
 import com.gzl.next.document.pojo.entity.DocProject;
-import com.gzl.next.document.pojo.form.ProjectForm;
-import com.gzl.next.document.pojo.form.UpdateProjectForm;
+import com.gzl.next.document.pojo.form.ProjectFORM;
+import com.gzl.next.document.pojo.form.UpdateProjectFORM;
 import com.gzl.next.document.pojo.vo.ProjectDetailVO;
 import com.gzl.next.document.pojo.vo.ProjectVO;
 import com.gzl.next.document.service.ProjectService;
@@ -41,9 +41,9 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public int createProject(ProjectForm projectForm, Long createdBy, Long updatedBy) {
-        int result = projectMapper.createProject(projectForm.getProjectName(),
-                projectForm.getDescription(), createdBy, updatedBy, projectForm.getPrivateProject());
+    public int createProject(ProjectFORM projectFORM, Long createdBy, Long updatedBy) {
+        int result = projectMapper.createProject(projectFORM.getProjectName(),
+                projectFORM.getDescription(), createdBy, updatedBy, projectFORM.getPrivateProject());
         return result;
     }
 
@@ -56,7 +56,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public int updateProjectById(UpdateProjectForm projectForm, Long updatedBy) {
+    public int updateProjectById(UpdateProjectFORM projectForm, Long updatedBy) {
         int res = projectMapper.updateProjectById(projectForm.getId(),
                 projectForm.getProjectName(), projectForm.getDescription(), updatedBy);
         return res;

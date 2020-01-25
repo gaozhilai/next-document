@@ -2,7 +2,7 @@ package com.gzl.next.document.service;
 
 import com.gzl.next.document.pojo.dto.RolePermissionDTO;
 import com.gzl.next.document.pojo.entity.AccountUser;
-import com.gzl.next.document.pojo.form.UserForm;
+import com.gzl.next.document.pojo.form.UserFORM;
 import com.gzl.next.document.pojo.vo.LoginVO;
 
 /**
@@ -35,8 +35,8 @@ public interface UserService {
 
     /**
      * 新增, 注册用户
-     * @param userForm 用户信息
+     * @param userFORM 用户信息
      * @return 1成功
      */
-    int signUp(UserForm userForm);
+    int signUp(UserFORM userFORM);
 }

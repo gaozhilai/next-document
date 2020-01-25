@@ -1,6 +1,6 @@
 package com.gzl.next.document.controller;
 
-import com.gzl.next.document.pojo.form.UserForm;
+import com.gzl.next.document.pojo.form.UserFORM;
 import com.gzl.next.document.pojo.vo.LoginVO;
 import com.gzl.next.document.service.UserService;
 import com.gzl.next.document.util.CommonResult;
@@ -35,8 +35,8 @@ public class UserController {
     }
 
     @PostMapping("/sign_up")
-    public ResponseEntity<CommonResult> signUp(@Validated @RequestBody UserForm userForm) {
-        int res = userService.signUp(userForm);
+    public ResponseEntity<CommonResult> signUp(@Validated @RequestBody UserFORM userFORM) {
+        int res = userService.signUp(userFORM);
         if (res > 0) {
             return ResultUtil.renderSuccess("用户注册成功");
         } else {

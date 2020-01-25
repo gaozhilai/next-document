@@ -9,9 +9,18 @@
         <result column="project_id" property="projectId" jdbcType="BIGINT"/>
         <result column="created_by" property="createdBy" jdbcType="BIGINT"/>
         <result column="updated_by" property="updatedBy" jdbcType="BIGINT"/>
+        <result column="parent_id" property="parentId" jdbcType="BIGINT"/>
     </resultMap>
     <sql id="Base_Column_List">
-    id, created_on, updated_on, category_name, project_id, created_by, updated_by
-  </sql>
+    id, created_on, updated_on, category_name, project_id, created_by, updated_by, parent_id
+    </sql>
 
+    <select id="getCategoryByProjectId" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM doc_category
+        WHERE
+          project_id = #{projectId}
+        AND
+          parent_id = #{parentId}
+    </select>
 </mapper>

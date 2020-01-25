@@ -18,6 +18,12 @@
     <sql id="Base_Column_List">
     id, created_on, updated_on, category_id, project_id, doc_name, doc_content, created_by, updated_id,
     free_editing, share_url, validate
-  </sql>
+    </sql>
 
+    <select id="getDocumentListByCategoryId" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM doc_document
+        WHERE
+          project_id = #{projectId} AND category_id = #{categoryId}
+    </select>
 </mapper>

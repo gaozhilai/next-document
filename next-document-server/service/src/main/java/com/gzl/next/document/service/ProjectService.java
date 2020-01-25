@@ -1,8 +1,7 @@
 package com.gzl.next.document.service;
 
-import com.gzl.next.document.pojo.entity.DocProject;
-import com.gzl.next.document.pojo.form.ProjectForm;
-import com.gzl.next.document.pojo.form.UpdateProjectForm;
+import com.gzl.next.document.pojo.form.ProjectFORM;
+import com.gzl.next.document.pojo.form.UpdateProjectFORM;
 import com.gzl.next.document.pojo.vo.ProjectDetailVO;
 import com.gzl.next.document.pojo.vo.ProjectVO;
 import com.gzl.next.document.util.PageData;
@@ -26,12 +25,12 @@ public interface ProjectService {
 
     /**
      * 新建项目
-     * @param projectForm 项目信息
+     * @param projectFORM 项目信息
      * @param createdBy 创建者id
      * @param updatedBy 更新者id
      * @return 1成功, 0失败
      */
-    int createProject(ProjectForm projectForm, Long createdBy, Long updatedBy);
+    int createProject(ProjectFORM projectFORM, Long createdBy, Long updatedBy);
 
     /**
      * 查询项目详情
@@ -46,5 +45,5 @@ public interface ProjectService {
      * @param updatedBy 更新者id
      * @return 1成功
      */
-    int updateProjectById(UpdateProjectForm projectForm, Long updatedBy);
+    int updateProjectById(UpdateProjectFORM projectForm, Long updatedBy);
 }

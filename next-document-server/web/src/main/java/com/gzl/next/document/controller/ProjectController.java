@@ -1,8 +1,8 @@
 package com.gzl.next.document.controller;
 
-import com.gzl.next.document.pojo.form.ProjectForm;
+import com.gzl.next.document.pojo.form.ProjectFORM;
 import com.gzl.next.document.pojo.form.ShortcutFORM;
-import com.gzl.next.document.pojo.form.UpdateProjectForm;
+import com.gzl.next.document.pojo.form.UpdateProjectFORM;
 import com.gzl.next.document.pojo.vo.AccountUserProjectVO;
 import com.gzl.next.document.pojo.vo.ProjectDetailVO;
 import com.gzl.next.document.pojo.vo.ProjectVO;
@@ -45,9 +45,9 @@ public class ProjectController {
     }
 
     @PostMapping("/project")
-    public ResponseEntity<CommonResult> createProject(HttpServletRequest request, @Validated @RequestBody ProjectForm projectForm) {
+    public ResponseEntity<CommonResult> createProject(HttpServletRequest request, @Validated @RequestBody ProjectFORM projectFORM) {
         Long currentUserId = RequestAttributeUtil.getCurrentUserId(request);
-        int result = projectService.createProject(projectForm, currentUserId, currentUserId);
+        int result = projectService.createProject(projectFORM, currentUserId, currentUserId);
         if (result > 0) {
             return ResultUtil.renderSuccess("创建项目成功");
         } else {
@@ -63,7 +63,7 @@ public class ProjectController {
 
     @PutMapping("/project")
     public ResponseEntity<CommonResult> updateProjectById(HttpServletRequest request,
-                                                          @Validated @RequestBody UpdateProjectForm projectForm) {
+                                                          @Validated @RequestBody UpdateProjectFORM projectForm) {
         if (StringUtils.isBlank(projectForm.getProjectName()) && StringUtils.isBlank(projectForm.getDescription())) {
             return ResultUtil.renderFailure("要更新的项目信息不能都为空");
         }

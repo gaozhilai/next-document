@@ -10,7 +10,7 @@ import javax.validation.constraints.NotBlank;
  * 新增, 注册用户表单对象
  */
 @Data
-public class UserForm {
+public class UserFORM {
     @NotBlank
     private String loginName;
     @NotBlank

@@ -26,4 +26,9 @@ public class DocCategory extends BaseEntity {
      * 最近一次更新者id
      */
     private Long updatedBy;
+
+    /**
+     * 父级目录id
+     */
+    private Long parentId;
 }
