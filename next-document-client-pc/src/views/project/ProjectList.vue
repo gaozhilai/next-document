@@ -52,7 +52,7 @@
           <div slot="header" class="clearfix">
             <span>{{project.projectName}}</span>
             <el-button v-if="shortcut_index" style="float: right; padding: 3px 0" type="text" @click="addShortcut(project.id)">添加</el-button>
-            <el-button v-if="!shortcut_index" style="float: right; padding: 3px 0" type="text">文档</el-button>
+            <el-button v-if="!shortcut_index" style="float: right; padding: 3px 0" type="text" @click="gotoDocumentPanel(project.id)">文档</el-button>
           </div>
           <div>
             {{project.description}}
@@ -143,6 +143,9 @@
             successMsg(res.data.msg);
             this.$router.push("/layout/project_panel");
           });
+        },
+        gotoDocumentPanel: function (projectId) {
+          this.$router.push("/layout/document_panel?project_id=" + projectId);
         }
       },
       created() {

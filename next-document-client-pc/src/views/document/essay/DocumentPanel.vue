@@ -8,26 +8,48 @@
             :props="props"
             :load="loadNode"
             lazy
-            @node-click="handleNodeClick"
+            @node-click="getDocumentDetail"
             >
+            <!--自定义树形组件节点内容-->
+              <span class="custom-tree-node" slot-scope="{ node, data }">
+                <i v-if="!data.leaf" class="el-icon-folder"></i>
+                <i v-if="data.leaf" class="el-icon-tickets"></i>
+                <span>{{ node.label }}</span>
+                <span>
+                  <el-button
+                    type="text"
+                    size="mini"
+                    @click="() => append(data)">
+                    重命名
+                  </el-button>
+                </span>
+                <span v-if="!data.leaf">
+                  <el-button
+                    type="text"
+                    size="mini"
+                    @click="() => append(data)">
+                    新建文档
+                  </el-button>
+                </span>
+              </span>
           </el-tree>
         </el-aside>
         <el-container direction="vertical">
           <el-header>
-            <div id="document-header">
+            <div v-if="doc.id" id="document-header">
               <div id="document-header-info">
-               author: gzl ; modify by: abc ; 创建时间: 2019/09/11 19:59 ; 修改时间: 2019/09/11 19:59
+               文档由{{doc.authorName}}创建于{{doc.formatCreatedOn}}, 由{{doc.modifyByName}}修改于{{doc.formatUpdatedOn}}
               </div>
               <div id="document-header-right">
                 赞同: 5 ; 反对: 1
               </div>
             </div>
           </el-header>
-          <el-main id="document-editor">
+          <el-main v-if="doc.id" id="document-editor">
             <mavon-editor
               v-if="preview"
               id="md-editor-preview"
-              v-model="content"
+              v-model="doc.content"
               :toolbars="{}"
               :subfield="false"
               :boxShadow="false"
@@ -45,7 +67,7 @@
             <mavon-editor
               v-if="!preview"
               id="md-editor"
-              v-model="content"
+              v-model="doc.content"
               @save="save"
             >
               <template slot="left-toolbar-after">
@@ -65,11 +87,22 @@
 
 <script>
   import {successMsg} from "../../../util/notify";
+  import {formatDate} from "../../../util/common";
 
   export default {
     data() {
       return {
-        content: "",
+        doc: {
+          id: '',
+          createdOn: '',
+          formatCreatedOn: '',
+          updatedOn: '',
+          formatUpdatedOn: '',
+          docName: '',
+          content: '',
+          authorName: '',
+          modifyByName: ''
+        },
         preview: true,
         props: {
           label: 'name',
@@ -84,16 +117,14 @@
     },
     methods: {
       loadNode(node, resolve) {
-        console.log("节点内容", node);
+        console.log("加载时传入节点内容", node);
         let url = '/document/categories/' + this.projectId;
         if (node.level === 0) {
           url = url + '/0';
         } else {
           url = url + '/' + node.data.id;
         }
-        console.log("url为", url);
         this.$axios.get(url).then(res => {
-          console.log("获取数据为", JSON.stringify(res.data));
           let data = res.data;
           let categories = data.data.categories;
           let documents = data.data.documents;
@@ -122,14 +153,45 @@
         this.preview = !this.preview;
       },
       save: function () {
-        successMsg("您的文档已保存至服务器", "保存成功")
+        let docId = this.doc.id;
+        let docName = this.doc.docName;
+        let docContent = this.doc.content;
+        this.$axios.patch('/document/' + docId, {
+          doc_name: docName,
+          doc_content: docContent
+        }).then(res => {
+          successMsg("您的文档已保存至服务器", "保存成功")
+          this.preview = true;
+          this.getDocumentDetailById(docId);
+        });
       },
       saveAndPreview: function () {
         this.save();
         this.togglePreview();
       },
-      handleNodeClick: function (data) {
-        console.log("点击内容", data)
+      getDocumentDetail: function (data) {
+        if (!data.leaf) {
+          return;
+        }
+        this.preview = true;
+        this.getDocumentDetailById(data.id);
+      },
+      getDocumentDetailById: function (documentId) {
+        this.$axios.get("/document/detail/" + documentId).then(res => {
+          let doc = res.data.data;
+          this.doc.id = doc.id;
+          this.doc.createdOn = doc.created_on;
+          this.doc.formatCreatedOn = formatDate(doc.created_on);
+          this.doc.updatedOn = doc.updated_on;
+          this.doc.formatUpdatedOn = formatDate(doc.updated_on);
+          this.doc.docName = doc.doc_name;
+          this.doc.content = doc.doc_content;
+          this.doc.authorName = doc.author_name;
+          this.doc.modifyByName = doc.modify_by_name;
+        });
+      },
+      append: function (data) {
+        console.log("传进来的数据", data);
       }
     },
     created() {
@@ -155,7 +217,6 @@
     background-color: #D3DCE6;
     color: #333;
     text-align: center;
-    line-height: 200px;
   }
   .el-main {
     background-color: #E9EEF3;
@@ -166,9 +227,9 @@
   #md-editor, #md-editor-preview {
     height: 100%;
   }
-  #layout-aside {
-    max-width: 250px;
-  }
+  /*#layout-aside {*/
+  /*  max-width: 250px;*/
+  /*}*/
   #document-editor {
     padding: 2px;
   }
