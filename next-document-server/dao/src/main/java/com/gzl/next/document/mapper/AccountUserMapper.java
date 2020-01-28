@@ -30,7 +30,7 @@ public interface AccountUserMapper {
      * @param avatar 头像url
      * @param phone 电话
      * @param email 邮箱
-     * @return
+     * @return 用户
      */
     int addUser(@Param("loginName") String loginName, @Param("nickname") String nickname,
                 @Param("password") String password, @Param("salt") String salt, @Param("valid") Integer valid,
@@ -43,4 +43,11 @@ public interface AccountUserMapper {
      * @return 成功插入数据条数
      */
     int insertBatchUser(@Param("users") List<AccountUser> users);
+
+    /**
+     * 根据用户id获取用户对象
+     * @param userId 用户id
+     * @return 用户
+     */
+    AccountUser getUserById(@Param("userId") Long userId);
 }

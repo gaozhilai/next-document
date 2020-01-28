@@ -30,6 +30,10 @@ public enum SysCodeEnum {
     TOKEN_ERROR(HttpStatus.UNAUTHORIZED, "Token错误, 请重新登录"),
     TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "登录已过期, 请重新登录"),
     LOGIN_NAME_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "登录名已经存在"),
+    /**
+     * 1200 - 1299 文档相关错误
+     */
+    ONLY_CREATOR_CAN_UPDATE(HttpStatus.BAD_REQUEST, "只有创建者才能更新此文档"),
     ;
 
     private HttpStatus status;

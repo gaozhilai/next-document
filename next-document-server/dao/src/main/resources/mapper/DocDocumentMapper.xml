@@ -10,13 +10,24 @@
         <result column="doc_name" property="docName" jdbcType="VARCHAR"/>
         <result column="doc_content" property="docContent" jdbcType="LONGVARCHAR"/>
         <result column="created_by" property="createdBy" jdbcType="BIGINT"/>
-        <result column="updated_id" property="updatedId" jdbcType="BIGINT"/>
+        <result column="modify_by" property="modifyId" jdbcType="BIGINT"/>
         <result column="free_editing" property="freeEditing" jdbcType="BIT"/>
         <result column="share_url" property="shareUrl" jdbcType="VARCHAR"/>
         <result column="validate" property="validate" jdbcType="BIT"/>
     </resultMap>
+
+    <resultMap id="DocumentDetailVOResultMap" type="com.gzl.next.document.pojo.vo.DocumentDetailVO">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="created_on" property="createdOn" jdbcType="TIMESTAMP"/>
+        <result column="updated_on" property="updatedOn" jdbcType="TIMESTAMP"/>
+        <result column="doc_name" property="docName" jdbcType="VARCHAR"/>
+        <result column="doc_content" property="docContent" jdbcType="LONGVARCHAR"/>
+        <result column="author_name" property="authorName" jdbcType="VARCHAR"/>
+        <result column="modify_by" property="modifyBy" jdbcType="BIGINT"/>
+    </resultMap>
+
     <sql id="Base_Column_List">
-    id, created_on, updated_on, category_id, project_id, doc_name, doc_content, created_by, updated_id,
+    id, created_on, updated_on, category_id, project_id, doc_name, doc_content, created_by, modify_by,
     free_editing, share_url, validate
     </sql>
 
@@ -26,4 +37,28 @@
         WHERE
           project_id = #{projectId} AND category_id = #{categoryId}
     </select>
+
+    <select id="getDocumentById" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM doc_document
+        WHERE
+          id = #{documentId}
+    </select>
+
+    <select id="getDocumentDetailById" resultMap="DocumentDetailVOResultMap">
+        SELECT
+          doc_document.id, doc_document.created_on, doc_document.updated_on, doc_document.doc_content,
+          doc_document.modify_by, doc_document.doc_name, account_user.nickname author_name
+        FROM doc_document LEFT JOIN account_user ON doc_document.created_by = account_user.id
+        WHERE
+          doc_document.id = #{documentId}
+    </select>
+
+    <update id="updateDocument">
+        UPDATE doc_document
+        SET
+          updated_on = NOW(), doc_name = #{docName}, doc_content =  #{docContent}, modify_by = #{modifyBy}
+        WHERE
+          id = #{documentId}
+    </update>
 </mapper>

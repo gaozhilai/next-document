@@ -2,6 +2,7 @@ package com.gzl.next.document.mapper;
 
 
 import com.gzl.next.document.pojo.entity.DocDocument;
+import com.gzl.next.document.pojo.vo.DocumentDetailVO;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -22,4 +23,29 @@ public interface DocDocumentMapper {
      */
     List<DocDocument> getDocumentListByCategoryId(@Param("projectId") Long projectId,
                                                   @Param("categoryId") Long categoryId);
+
+    /**
+     * 通过文档id获取文档对象
+     * @param documentId 文档id
+     * @return 文档对象
+     */
+    DocDocument getDocumentById(@Param("documentId") Long documentId);
+
+    /**
+     * 通过文档id查询文档详情
+     * @param documentId 文档id
+     * @return 文档
+     */
+    DocumentDetailVO getDocumentDetailById(@Param("documentId") Long documentId);
+
+    /**
+     * 更新文档基本信息
+     * @param docName 文档名称
+     * @param docContent 文档内容
+     * @param modifyBy 更新者id
+     * @param documentId 更新者id
+     * @return 大于1成功
+     */
+    int updateDocument(@Param("docName") String docName, @Param("docContent") String docContent,
+                       @Param("modifyBy") Long modifyBy, @Param("documentId") Long documentId);
 }

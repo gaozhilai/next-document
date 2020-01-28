@@ -29,7 +29,7 @@ public class DocDocument extends BaseEntity {
     /**
      * 更新id
      */
-    private Long updatedId;
+    private Long modifyId;
     /**
      * 是否共享编辑
      */

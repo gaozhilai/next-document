@@ -48,4 +48,11 @@
             )
         </foreach>
     </insert>
+
+    <select id="getUserById" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM account_user
+        WHERE
+          id = #{userId}
+    </select>
 </mapper>
