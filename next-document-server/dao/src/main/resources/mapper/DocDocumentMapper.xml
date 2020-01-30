@@ -56,8 +56,14 @@
 
     <update id="updateDocument">
         UPDATE doc_document
-        SET
-          updated_on = NOW(), doc_name = #{docName}, doc_content =  #{docContent}, modify_by = #{modifyBy}
+        <set>
+            updated_on = NOW(),
+            doc_name = #{docName},
+            <if test="docContent != null and docContent != ''">
+                doc_content =  #{docContent},
+            </if>
+            modify_by = #{modifyBy}
+        </set>
         WHERE
           id = #{documentId}
     </update>

@@ -18,4 +18,13 @@ public interface CategoryService {
      * @return 符合条件的目录
      */
     CategoryListVO getCategoryByProjectId(Long projectId, Long parentId);
+
+    /**
+     * 更新文件夹名称
+     * @param categoryId 文件夹id
+     * @param name 新名称
+     * @param updatedBy 更新者id
+     * @return 大于1成功
+     */
+    int updateCategory(Long categoryId, String name, Long updatedBy);
 }

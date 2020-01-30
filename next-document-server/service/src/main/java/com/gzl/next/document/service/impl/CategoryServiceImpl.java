@@ -48,4 +48,9 @@ public class CategoryServiceImpl implements CategoryService {
         categoryListVO.setDocuments(documentVOS);
         return categoryListVO;
     }
+
+    @Override
+    public int updateCategory(Long categoryId, String name, Long updatedBy) {
+        return docCategoryMapper.updateCategory(categoryId, name, updatedBy);
+    }
 }

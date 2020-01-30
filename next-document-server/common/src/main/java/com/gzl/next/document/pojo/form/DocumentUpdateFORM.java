@@ -20,6 +20,5 @@ public class DocumentUpdateFORM {
     /**
      * 文档内容
      */
-    @NotBlank
     String docContent;
 }

@@ -23,4 +23,10 @@
         AND
           parent_id = #{parentId}
     </select>
+
+    <update id="updateCategory">
+        UPDATE doc_category
+        SET category_name = #{name}, updated_by = #{updatedBy}
+        WHERE id = #{categoryId}
+    </update>
 </mapper>

@@ -22,4 +22,15 @@ public interface DocCategoryMapper {
      */
     List<DocCategory> getCategoryByProjectId(@Param("projectId") Long projectId,
                                              @Param("parentId") Long parentId);
+
+    /**
+     * 更新文件夹名称
+     * @param categoryId 文件夹id
+     * @param name 新名称
+     * @param updatedBy 更新者id
+     * @return 大于1成功
+     */
+    int updateCategory(@Param("categoryId") Long categoryId,
+                       @Param("name") String name,
+                       @Param("updatedBy") Long updatedBy);
 }

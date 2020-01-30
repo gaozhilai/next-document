@@ -28,16 +28,7 @@ import java.util.List;
 @Validated
 public class DocumentController {
     @Autowired
-    private CategoryService categoryService;
-    @Autowired
     private DocumentService documentService;
-
-    @GetMapping("/categories/{project_id}/{parent_id}")
-    public ResponseEntity<CommonResult<CategoryListVO>> getCategoryList(@PathVariable("project_id") Long projectId,
-                                                                        @PathVariable("parent_id") Long parentId) {
-        CategoryListVO categoryListVO = categoryService.getCategoryByProjectId(projectId, parentId);
-        return ResultUtil.renderSuccess(categoryListVO);
-    }
 
     @GetMapping("/detail/{document_id}")
     public ResponseEntity<CommonResult<DocumentDetailVO>> getDocumentDetailById(@PathVariable("document_id") Long documentId) {
