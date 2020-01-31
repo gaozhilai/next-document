@@ -1,6 +1,7 @@
 package com.gzl.next.document.controller;
 
 import com.gzl.next.document.pojo.form.CategoryFORM;
+import com.gzl.next.document.pojo.form.CategoryUpdateFORM;
 import com.gzl.next.document.pojo.vo.CategoryListVO;
 import com.gzl.next.document.service.CategoryService;
 import com.gzl.next.document.util.CommonResult;
@@ -35,9 +36,17 @@ public class CategoryController {
     @PatchMapping("/category/{category_id}")
     public ResponseEntity<CommonResult> updateCategory(HttpServletRequest request,
                                                        @NotNull @PathVariable("category_id") Long categoryId,
+                                                       @Validated @RequestBody CategoryUpdateFORM categoryUpdateFORM) {
+        Long currentUserId = RequestAttributeUtil.getCurrentUserId(request);
+        categoryService.updateCategory(categoryId, categoryUpdateFORM.getCategoryName(), currentUserId);
+        return ResultUtil.renderSuccess("重命名文件夹成功");
+    }
+
+    @PostMapping("/category")
+    public ResponseEntity<CommonResult> createCategory(HttpServletRequest request,
                                                        @Validated @RequestBody CategoryFORM categoryFORM) {
         Long currentUserId = RequestAttributeUtil.getCurrentUserId(request);
-        categoryService.updateCategory(categoryId, categoryFORM.getCategoryName(), currentUserId);
-        return ResultUtil.renderSuccess("重命名文件夹成功");
+        categoryService.createCategory(categoryFORM, currentUserId);
+        return ResultUtil.renderSuccess("创建文件夹成功");
     }
 }

@@ -29,4 +29,18 @@
         SET category_name = #{name}, updated_by = #{updatedBy}
         WHERE id = #{categoryId}
     </update>
+
+    <insert id="createCategory">
+        INSERT INTO doc_category
+          (created_on, updated_on, category_name, project_id, created_by, updated_by, parent_id)
+        VALUE
+          (NOW(), NOW(), #{categoryName}, #{projectId}, #{createdBy}, #{createdBy}, #{parentId})
+    </insert>
+
+    <select id="getSameNameFolderCount" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM doc_category
+        WHERE
+          project_id = #{projectId} AND parent_id = #{parentId} AND category_name = #{categoryName}
+    </select>
 </mapper>

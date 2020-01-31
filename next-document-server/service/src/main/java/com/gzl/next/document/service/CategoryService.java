@@ -1,6 +1,7 @@
 package com.gzl.next.document.service;
 
 import com.gzl.next.document.pojo.entity.DocCategory;
+import com.gzl.next.document.pojo.form.CategoryFORM;
 import com.gzl.next.document.pojo.vo.CategoryListVO;
 
 import java.util.List;
@@ -27,4 +28,12 @@ public interface CategoryService {
      * @return 大于1成功
      */
     int updateCategory(Long categoryId, String name, Long updatedBy);
+
+    /**
+     * 创建文件夹
+     * @param categoryFORM 文件夹信息
+     * @param createdBy 创建者id
+     * @return 大于1成功
+     */
+    int createCategory(CategoryFORM categoryFORM, Long createdBy);
 }

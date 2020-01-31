@@ -33,4 +33,28 @@ public interface DocCategoryMapper {
     int updateCategory(@Param("categoryId") Long categoryId,
                        @Param("name") String name,
                        @Param("updatedBy") Long updatedBy);
+
+    /**
+     * 创建文件夹
+     * @param projectId 项目id
+     * @param parentId 父目录id, 0为根目录
+     * @param createdBy 创建者id
+     * @param categoryName 文件夹名称
+     * @return 大于1成功
+     */
+    int createCategory(@Param("projectId") Long projectId,
+                       @Param("parentId") Long parentId,
+                       @Param("createdBy") Long createdBy,
+                       @Param("categoryName") String categoryName);
+
+    /**
+     * 获取同层目录下同名文件夹个数
+     * @param projectId 项目id
+     * @param parentId 文件夹父级id
+     * @param categoryName 文件夹名称
+     * @return 同名文件夹个数
+     */
+    int getSameNameFolderCount(@Param("projectId") Long projectId,
+                               @Param("parentId") Long parentId,
+                               @Param("categoryName") String categoryName);
 }

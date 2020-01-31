@@ -34,6 +34,7 @@ public enum SysCodeEnum {
      * 1200 - 1299 文档相关错误
      */
     ONLY_CREATOR_CAN_UPDATE(HttpStatus.BAD_REQUEST, "只有创建者才能更新此文档"),
+    FOLDER_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "文件夹已存在"),
     ;
 
     private HttpStatus status;
