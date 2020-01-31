@@ -20,8 +20,17 @@
           :props="props"
           :load="loadNode"
           lazy
+          ref="tree"
           @node-click="getDocumentDetail"
           @node-contextmenu="rightClickShowMenu"
+          @node-drag-start="handleDragStart"
+          @node-drag-enter="handleDragEnter"
+          @node-drag-leave="handleDragLeave"
+          @node-drag-over="handleDragOver"
+          @node-drag-end="handleDragEnd"
+          @node-drop="handleDrop"
+          :allow-drop="allowDrop"
+          :allow-drag="allowDrag"
         >
           <!--自定义树形组件节点内容-->
           <span class="custom-tree-node" slot-scope="{ node, data }">
@@ -119,7 +128,7 @@
     >
       <el-input v-model="folderOrDocumentName" placeholder="请输入新名称"></el-input>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="clearData">取 消</el-button>
+        <el-button @click="cancel">取 消</el-button>
         <el-button type="primary" @click="executeCommand">确 定</el-button>
       </span>
     </el-dialog>
@@ -156,8 +165,11 @@
         dialogVisible: false,
         dialogTitle: '新建文件夹',
         currentNodeData: '', // 当前右键对应节点包含的数据
+        currentNode: '', // 当前右键对应节点
         currentCommandType: '', // folder | document | renameFolder | renameDocument 新建/重命名 文档, 文件夹
-        folderOrDocumentName: null
+        folderOrDocumentName: null,
+        nodeHead: null,
+        resolveHead: null
       }
     },
     mounted() {
@@ -168,6 +180,8 @@
         console.log("加载时传入节点内容", node);
         let url = '/category/categories/' + this.projectId;
         if (node.level === 0) {
+          this.nodeHead = node;
+          this.resolveHead = resolve;
           url = url + '/0';
         } else {
           url = url + '/' + node.data.id;
@@ -241,9 +255,10 @@
       append: function (data) {
         console.log("传进来的数据", data);
       },
-      rightClickShowMenu: function (event, data, value, element) {
+      rightClickShowMenu: function (event, data, node, element) {
         this.menuVisible = true;
         this.currentNodeData = data;
+        this.currentNode = node;
         if (data.leaf) {
           this.menuType = 'document';
         } else {
@@ -255,18 +270,46 @@
         menu.style.top = event.clientY - 10 + "px";
         console.log("右键被点击的event:", event);
         console.log("右键被点击的object:", data);
-        console.log("右键被点击的value:", value);
+        console.log("右键被点击的value:", node);
         console.log("右键被点击的element:", element);
       },
-      createFolder: function (name) {
-        // 展示创建文件夹dialog
+      /**
+       *创建文件夹
+       * @param data 父节点, 可能不存在
+       * @param name 文件夹名称
+       */
+      createFolder: function (data, name) {
         // 请求后台根据当前节点创建文件夹
-
+        let parentId = 0;
+        if (data && data.id) {
+          parentId = data.id;
+        }
+        let param = {
+          project_id: this.projectId,
+          parent_id: parentId,
+          category_name: name
+        };
+        // console.log('project_id为', this.projectId, 'parentId为', parentId, 'categoryName为', name);
+        // console.log('传递参数为', JSON.stringify(param));
+        this.$axios.post("/category", param).then(res => {
+          successMsg("新建文件夹成功");
+          if (parentId === 0) {
+            this.refreshRoot();
+          } else {
+            this.refreshNode(this.currentNode);
+          }
+          // 执行完毕清除数据
+          this.clearData();
+        });
       },
-      createDocument: function (name) {
-        // 展示创建文档dialog
-        // 请求后台根据当前节点创建文件夹
-
+      /**
+       *创建文档
+       * @param data 父节点, 可能不存在
+       * @param name 文档名称
+       */
+      createDocument: function (data, name) {
+        // 执行完毕清除数据
+        this.clearData();
       },
       /**
        * 重命名操作
@@ -296,6 +339,8 @@
         }
         this.$axios.patch(url + id, param).then(res => {
           successMsg("重命名成功", "成功");
+          // 执行完毕清除数据
+          this.clearData();
         }).catch(err => {
           data.name = oldName;
         });
@@ -326,10 +371,10 @@
       executeCommand: function () {
         this.dialogVisible = false;
         if (this.currentCommandType === 'folder') {
-          this.createFolder(this.folderOrDocumentName);
+          this.createFolder(this.currentNodeData, this.folderOrDocumentName);
         }
         if (this.currentCommandType === 'document') {
-          this.createDocument(this.folderOrDocumentName);
+          this.createDocument(this.currentNodeData, this.folderOrDocumentName);
         }
         if (this.currentCommandType === 'renameFolder') {
           this.rename(this.currentNodeData, 'renameFolder', this.folderOrDocumentName);
@@ -337,15 +382,55 @@
         if (this.currentCommandType === 'renameDocument') {
           this.rename(this.currentNodeData, 'renameDocument', this.folderOrDocumentName);
         }
-        /*命令执行完毕, 清除当前节点数据*/
-        this.currentNodeData = null;
-        this.folderOrDocumentName = null;
+      },
+      cancel: function () {
+        this.dialogVisible = false;
+        this.clearData();
       },
       clearData: function () {
-        this.dialogVisible = false;
         /*命令执行完毕, 清除当前节点数据*/
         this.currentNodeData = null;
         this.folderOrDocumentName = null;
+        this.currentNode = null;
+      },
+      refreshNode(parentNode){
+        parentNode.loaded = false;
+        parentNode.expand();
+      },
+      refreshRoot: function () {
+        if (!this.nodeHead || !this.resolveHead) {
+          return;
+        }
+        this.nodeHead.childNodes = [];
+        this.loadNode(this.nodeHead, this.resolveHead);
+      },
+      handleDragStart(node, ev) {
+        console.log('drag start', node);
+      },
+      handleDragEnter(draggingNode, dropNode, ev) {
+        console.log('tree drag enter: ', dropNode.label);
+      },
+      handleDragLeave(draggingNode, dropNode, ev) {
+        console.log('tree drag leave: ', dropNode.label);
+      },
+      handleDragOver(draggingNode, dropNode, ev) {
+        console.log('tree drag over: ', dropNode.label);
+      },
+      handleDragEnd(draggingNode, dropNode, dropType, ev) {
+        console.log('tree drag end: ', dropNode && dropNode.label, dropType);
+      },
+      handleDrop(draggingNode, dropNode, dropType, ev) {
+        console.log('tree drop: ', dropNode.label, dropType);
+      },
+      allowDrop(draggingNode, dropNode, type) {
+        // 允许放到不是叶子的节点内(文件夹)
+        if (type !== 'inner') {
+          return false;
+        }
+        return !dropNode.data.leaf;
+      },
+      allowDrag(draggingNode) {
+        return true;
       }
     },
     created() {
