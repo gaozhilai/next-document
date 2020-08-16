@@ -26,29 +26,74 @@ public interface DatabaseDetectInitMapper {
      */
     int weatherDataBaseExists(@Param("schemaName") String schemaName);
 
+    /**
+     * 选择数据库
+     * @param databaseName 数据库
+     */
     void selectDatabase(@Param("databaseName") String databaseName);
 
+    /**
+     * 创建用户权限表
+     */
     void createAccountPermission();
 
+    /**
+     * 创建禁止用户权限表
+     */
     void createdAccountPermissionForbidden();
 
+    /**
+     * 创建用户角色表
+     */
     void createAccountRole();
 
+    /**
+     * 创建用户角色权限表
+     */
     void createAccountRolePermission();
 
+    /**
+     * 创建用户表
+     */
     void createAccountUser();
 
+    /**
+     * 创建用户权限表
+     */
     void createAccountUserPermission();
 
+    /**
+     * 创建用户项目表
+     */
+    void createAccountUserProject();
+
+    /**
+     * 创建用户角色表
+     */
     void createAccountUserRole();
 
+    /**
+     * 创建菜单配置表
+     */
     void createConfigModel();
 
+    /**
+     * 创建文件夹表
+     */
     void createDocCategory();
 
+    /**
+     * 创建文档表
+     */
     void createDocDocument();
 
+    /**
+     * 创建文档历史表
+     */
     void createDocHistory();
 
+    /**
+     * 创建项目表
+     */
     void createDocProject();
 }
