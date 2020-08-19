@@ -11,8 +11,14 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @MapperScan("com.gzl.next.document.mapper")
 public class NextDocumentServerApplication {
 
+	private static String[] args;
+
 	public static void main(String[] args) {
+		NextDocumentServerApplication.args = args;
 		SpringApplication.run(NextDocumentServerApplication.class, args);
 	}
 
+	public static String[] getArgs() {
+		return args;
+	}
 }

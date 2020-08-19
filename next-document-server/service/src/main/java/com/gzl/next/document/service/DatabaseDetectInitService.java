@@ -8,8 +8,9 @@ package com.gzl.next.document.service;
 public interface DatabaseDetectInitService {
     /**
      * 检测和初始化数据库表结构
+     * @return 返回是否初始化数据库
      */
-    void detectInitDatabase();
+    boolean detectInitDatabase();
 
     /**
      * 初始化以必要数据

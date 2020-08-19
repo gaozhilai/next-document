@@ -36,7 +36,7 @@ public class DatabaseDetectInitServiceImpl implements DatabaseDetectInitService 
     private AccountUserRoleMapper accountUserRoleMapper;
 
     @Override
-    public void detectInitDatabase() {
+    public boolean detectInitDatabase() {
         int databaseExists = databaseDetectInitMapper.weatherTableExists("next_document",
                 "account_user");
         // account_user表不存在视为数据库需要初始化表结构
@@ -61,7 +61,9 @@ public class DatabaseDetectInitServiceImpl implements DatabaseDetectInitService 
             this.initAccountUserData();
             this.initUserRoleData();
             log.info("初始化数据库表结构以及必要数据完毕");
+            return true;
         }
+        return false;
     }
 
     @Override
