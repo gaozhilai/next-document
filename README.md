@@ -53,12 +53,12 @@ PC端项目基于Vue, UI框架使用ElementUI
 
 # 实际效果
 
-![](https://raw.githubusercontent.com/gaozhilai/my_pic/master/weixin/next_document1.jpg)
+![](./pic/next_document1.jpg)
 
-![](https://raw.githubusercontent.com/gaozhilai/my_pic/master/weixin/next_document2.jpg)
+![](./pic/next_document2.jpg)
 
-![](https://raw.githubusercontent.com/gaozhilai/my_pic/master/weixin/next_document3.jpg)
+![](./pic/next_document3.jpg)
 
-![](https://raw.githubusercontent.com/gaozhilai/my_pic/master/weixin/next_document4.jpg)
+![](./pic/next_document4.jpg)
 
-![](https://raw.githubusercontent.com/gaozhilai/my_pic/master/weixin/next_document5.jpg)
+![](./pic/next_document5.jpg)
